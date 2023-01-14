@@ -19,8 +19,3 @@ poetry add MetaTrader5
 ```shell
 pip install --upgrade MetaTrader5
 ```
-
-
-
-
-
