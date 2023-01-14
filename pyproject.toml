@@ -1,0 +1,91 @@
+[tool.poetry]
+name = "trader"
+version = "0.1.0"
+description = "MetaTrader5"
+authors = ["Oleg Alexandrov <alexandrovoleg.ru@gmail.com>"]
+license = "Apache-2.0"
+readme = "README.md"
+homepage = "https://teratron.github.io/trader"
+repository = "https://github.com/teratron/trader"
+documentation = "https://teratron.github.io/trader/docs"
+keywords = [
+    "MetaTrader5",
+    "trader"
+]
+classifiers = [
+    "Environment :: Console",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: Apple :: MacOS",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Software Development :: Libraries :: Python Modules"
+]
+packages = [
+    { include = "trader", from = "src" }
+]
+include = [
+    { path = "tests", format = "sdist" }
+]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+[tool.poetry.group.dev.dependencies]
+poetry = "^1.3.0"
+requests = "^2.28.1"
+setuptools = "^65.6.3"
+pre-commit = "^2.21.0"
+black = "^22.12.0"
+pylint = "^2.15.10"
+flake8 = "^6.0.0"
+autopep8 = "^2.0.1"
+bandit = "^1.7.4"
+
+[tool.poetry.group.typing.dependencies]
+mypy = "^0.991"
+
+[tool.poetry.group.docs.dependencies]
+sphinx = "^5.3.0"
+pydocstyle = "^6.2.3"
+
+[tool.poetry.group.test.dependencies]
+pytest = "^7.2.0"
+
+[tool.poetry.scripts]
+app = "trader.console.app:main"
+perceptron = "examples.perceptron.main"
+tests = "pytest:tests"
+black = "black:src/trader/*.py"
+
+[tool.mypy]
+files = "src/**/*.py"
+mypy_path = "src"
+packages = "src/trader"
+strict = true
+namespace_packages = true
+explicit_package_bases = true
+ignore_missing_imports = true
+show_error_codes = true
+
+[tool.black]
+line-length = 88
+target-version = ["py37", "py38", "py39", "py310", "py311"]
+preview = true
+include = '\.pyi?$'
+
+[tool.pytest.ini_options]
+addopts = "-n auto"
+testpaths = ["tests"]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+# Installation poetry:
+# --------------------
+# python -m venv .venv
+# .venv/bin/pip install -U pip setuptools
+# .venv/bin/pip install poetry
