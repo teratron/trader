@@ -52,7 +52,7 @@ packaging: ## New project
 set-url: ## git remote set-url origin git@github.com:login/repo.git
 	git remote set-url origin git@github.com:teratron/trader.git
 
-message = Settigs
+message = Indicators
 branch = master
 add-commit-push: ## add commit push
 	git add .
