@@ -20,7 +20,7 @@ class Indicator:  # (Symbol, Timeframe):
     def __subclasscheck__(self, subclass: Any) -> None:
         print("__subclasscheck__:Indicator", subclass)
 
-    def __init__(self, *args: Result
+    def __init__(self, *args: Any #Result
 
                  # dataset: Optional[list[Any]] = None,
                  # /,
