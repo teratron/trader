@@ -14,10 +14,10 @@ class Indicator:  # (Symbol, Timeframe):
     Indicator.
     """
 
-    def __init_subclass__(cls, **kwargs) -> None:
+    def __init_subclass__(cls, **kwargs: Any) -> None:
         print("__init_subclass__:Indicator")
 
-    def __subclasscheck__(self, subclass):
+    def __subclasscheck__(self, subclass: Any) -> None:
         print("__subclasscheck__:Indicator", subclass)
 
     def __init__(self, *args: Result
@@ -32,6 +32,6 @@ class Indicator:  # (Symbol, Timeframe):
         # self.symbol = symbol
         # self.timeframe = timeframe
 
-    def __call__(self, *args, **kwargs):
+    def __call__(self, *args: Any, **kwargs: Any) -> Any:
         print("__call__:Indicator", *args)
         return args
