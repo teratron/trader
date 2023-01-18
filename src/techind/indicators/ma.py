@@ -1,9 +1,10 @@
 from typing import Any, Optional, Union
 
-from techind.indicator import Indicator as ind  # , Symbol, Timeframe
+
+from techind.indicator import Indicator
 
 
-class MA:  # (ind)
+class MA(Indicator):
     """
     Moving Average.
 
@@ -12,8 +13,8 @@ class MA:  # (ind)
     * MA()
     * MA(dataset[:])
     * MA(dataset[:], period=24, method=0, price=0, shift=0)
-    * MA(symbol="EURUSD", timeframe=1)
-    * MA(symbol="EURUSD", timeframe=1, period=24, method=0, price=0, shift=0)
+    * MA("EURUSD", timeframe=1)
+    * MA("EURUSD", timeframe=1, period=24, method=0, price=0, shift=0)
 
     Instance `ma = MA()`:
 
@@ -26,32 +27,48 @@ class MA:  # (ind)
     name = "Moving Average"
     type = "MA"
     description = __doc__
+    #dataset = []
+    symbol = ""
+    # timeframe = 1
 
     def __subclasscheck__(self, subclass: Any) -> None:
         print("__subclasscheck__:MA", subclass)
 
     def __init__(
             self,
-            /,
-            dataset: Union[list[Any], tuple[str, Any], None] = None,
+            reader: Union[list[Any], str, None] = None,
+            timeframe: int = 1,
+            # *args: tuple[Union[Optional[list[Any]], str], Any],
+            # dataset: Optional[list[Any]] = None,
             # symbol: str = "",
             # timeframe: int = 1,
             *,
-            period: int = 24,
+            period: int = 14,
             method: int = 0,
             price: int = 0,
             shift: int = 0
     ) -> None:
-        print("__init__:MA")
-        #super().__init__(*dataset)
+        print("__init__:MA", reader)
 
-        # match dataset:
-        #     case "":
-        #         pass
+        match reader:
+            case list() as dataset:
+                super().__init__(dataset)
+                self.dataset = dataset
+                print('dataset', dataset)
+            case str() as symbol:
+                self.symbol: str = symbol
+                print('symbol', symbol)
+        #     case int() as timeframe:
+        #         self.timeframe: int = timeframe
+        #         print('timeframe', timeframe)
 
-        self.dataset = dataset
+        # self.dataset = dataset
         # self.symbol = symbol
-        # self.timeframe = timeframe
+        self.timeframe = timeframe
+
+        # self.dataset = args[0]
+        # self.symbol = args[0]
+        # self.timeframe = args[1]
 
         self.period: int = period
         self.method: int = method
@@ -68,6 +85,6 @@ if __name__ == "__main__":
     print(ma2.dataset)
     ma3 = MA("EURUSD", 1)
     print(ma3.dataset)
-    ma4 = MA("EURUSD", 1)
+    ma4 = MA("EURUSD", timeframe=1, period=24, method=0, price=0, shift=0)
 
     #print(ma(42))

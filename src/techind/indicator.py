@@ -14,6 +14,8 @@ class Indicator:  # (Symbol, Timeframe):
     Indicator.
     """
 
+    dataset = []
+
     def __init_subclass__(cls, **kwargs: Any) -> None:
         print("__init_subclass__:Indicator")
 
@@ -29,8 +31,7 @@ class Indicator:  # (Symbol, Timeframe):
                  ) -> None:
         print("__init__:Indicator", args)
         # self.dataset = dataset
-        # self.symbol = symbol
-        # self.timeframe = timeframe
+
 
     def __call__(self, *args: Any, **kwargs: Any) -> Any:
         print("__call__:Indicator", *args)
