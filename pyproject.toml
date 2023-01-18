@@ -10,7 +10,7 @@ repository = "https://github.com/teratron/trader"
 documentation = "https://teratron.github.io/trader/docs"
 keywords = [
     "metatrader",
-    "trader",
+    "market",
     "forex",
     "currency",
     "exchange"

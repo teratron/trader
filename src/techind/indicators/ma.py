@@ -1,10 +1,14 @@
 from typing import Any, Optional, Union
 
 
-from techind.indicator import Indicator
+#from techind.indicator import Indicator
 
 
-class MA(Indicator):
+#class MA(Indicator):
+from techind.market import Market
+
+
+class MA(Market):
     """
     Moving Average.
 
@@ -15,6 +19,7 @@ class MA(Indicator):
     * MA(dataset[:], period=24, method=0, price=0, shift=0)
     * MA("EURUSD", timeframe=1)
     * MA("EURUSD", timeframe=1, period=24, method=0, price=0, shift=0)
+    * MA(period=24, method=0, price=0, shift=0)
 
     Instance `ma = MA()`:
 
@@ -27,9 +32,6 @@ class MA(Indicator):
     name = "Moving Average"
     type = "MA"
     description = __doc__
-    #dataset = []
-    symbol = ""
-    # timeframe = 1
 
     def __subclasscheck__(self, subclass: Any) -> None:
         print("__subclasscheck__:MA", subclass)
@@ -38,10 +40,6 @@ class MA(Indicator):
             self,
             reader: Union[list[Any], str, None] = None,
             timeframe: int = 1,
-            # *args: tuple[Union[Optional[list[Any]], str], Any],
-            # dataset: Optional[list[Any]] = None,
-            # symbol: str = "",
-            # timeframe: int = 1,
             *,
             period: int = 14,
             method: int = 0,
@@ -54,22 +52,10 @@ class MA(Indicator):
             case list() as dataset:
                 super().__init__(dataset)
                 self.dataset = dataset
-                print('dataset', dataset)
             case str() as symbol:
                 self.symbol: str = symbol
-                print('symbol', symbol)
-        #     case int() as timeframe:
-        #         self.timeframe: int = timeframe
-        #         print('timeframe', timeframe)
 
-        # self.dataset = dataset
-        # self.symbol = symbol
         self.timeframe = timeframe
-
-        # self.dataset = args[0]
-        # self.symbol = args[0]
-        # self.timeframe = args[1]
-
         self.period: int = period
         self.method: int = method
         self.price: int = price
@@ -86,5 +72,6 @@ if __name__ == "__main__":
     ma3 = MA("EURUSD", 1)
     print(ma3.dataset)
     ma4 = MA("EURUSD", timeframe=1, period=24, method=0, price=0, shift=0)
+    ma5 = MA(period=24, method=0, price=0, shift=0)
 
-    #print(ma(42))
+    print(ma(42))
