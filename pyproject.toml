@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "trader"
-version = "0.1.0"
-description = "Trader for MetaTrader5"
+version = "0.1.1"
+description = "Trader for MetaTrader 5"
 authors = ["Oleg Alexandrov <alexandrovoleg.ru@gmail.com>"]
 license = ""
 readme = "README.md"
@@ -9,7 +9,7 @@ homepage = "https://teratron.github.io/trader"
 repository = "https://github.com/teratron/trader"
 documentation = "https://teratron.github.io/trader/docs"
 keywords = [
-    "MetaTrader5",
+    "metatrader",
     "trader",
     "forex",
     "currency",
@@ -29,7 +29,8 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules"
 ]
 packages = [
-    { include = "trader", from = "src" }
+    { include = "trader", from = "src" },
+    { include = "techind", from = "src" }
 ]
 include = [
     { path = "tests", format = "sdist" }
@@ -102,4 +103,4 @@ build-backend = "poetry.core.masonry.api"
 
 # Change environments
 # --------------------
-# poetry env use python3.10
+# poetry env use path/to/python
