@@ -33,9 +33,7 @@ class Indicator:  # (Symbol, Timeframe):
 def moving_average(
         data: Sequence[Union[float, int]],
         /,
-        period: int = 1,
-        *,
-        inverse: bool = False
+        period: int = 1
 ) -> Union[list[float], float, None]:
     _len = len(data)
     if period > _len:
@@ -48,17 +46,32 @@ def moving_average(
         data = list(data)
 
     _avg: list[float] = []
-    for i in range(_len - period + 1):
+    # for i in range(_len - period + 1):
+    for i in range(period - 1, _len):
         _sum = 0.0
-        for item in data[i:period + i]:
-            print(item)
+
+        if i == period - 1:
+            items = data[i::-1]
+        else:
+            items = data[i:i - period:-1]
+        # j = i + period - 1
+        # for item in data[i:period + i]:
+        print(items)
+        for item in items:
+
             _sum += item
 
+            # if j == item:
+            #     print(j)
+
+            # j += 1
+            print(i, item, _sum, sep="   ")
+
         _avg.append(_sum / float(period))
-        print(_avg, end="\n")
+        print("avg", _avg, end="\n")
 
     return _avg
 
 
 if __name__ == "__main__":
-    print(moving_average([1, 2, 3, 4, 5], 3))
+    print(moving_average([0, 1, 2, 3, 4, 5], 3))
