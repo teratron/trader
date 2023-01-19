@@ -65,13 +65,21 @@ class MA(Market):
 if __name__ == "__main__":
     # ma = MA(ind.EURUSD, ind.TIMEFRAME_M1)
 
-    ma = MA()
-    ma1 = MA([1, 2, 3])
-    ma2 = MA([1, 2, 3], period=24, method=0, price=0, shift=0)
-    print(ma2.dataset)
-    ma3 = MA("EURUSD", 1)
-    print(ma3.dataset)
-    ma4 = MA("EURUSD", timeframe=1, period=24, method=0, price=0, shift=0)
-    ma5 = MA(period=24, method=0, price=0, shift=0)
+    # ma = MA()
+    # print(ma(42))
 
-    print(ma(42))
+    ma1 = MA([1.32, 2.7, 3.92])
+    print(ma1(43))
+    print(ma1[2])
+    ma1[2] = 9.61
+    print(ma1[2])
+
+    # ma2 = MA([1, 2, 3], period=24, method=0, price=0, shift=0)
+    # print(ma2.dataset)
+    #
+    # ma3 = MA("EURUSD", 1)
+    # print(ma3.dataset)
+    #
+    # ma4 = MA("EURUSD", timeframe=1, period=24, method=0, price=0, shift=0)
+    #
+    # ma5 = MA(period=24, method=0, price=0, shift=0)

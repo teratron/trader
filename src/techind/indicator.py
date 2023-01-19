@@ -21,7 +21,7 @@ class Indicator:  # (Symbol, Timeframe):
     def __subclasscheck__(self, subclass: Any) -> None:
         print("__subclasscheck__:Indicator", subclass)
 
-    def __init__(self, *args: Any) -> None:
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         print("__init__:Indicator", args)
         self.dataset = args[0]
 
@@ -29,48 +29,46 @@ class Indicator:  # (Symbol, Timeframe):
         print("__call__:Indicator", *args)
         return args[0]
 
+    def __getitem__(self, item: int) -> Any:
+        if 0 <= item < len(self.dataset):
+            return self.dataset[item]
+        else:
+            raise IndexError("Неверный индекс")
 
-def moving_average(
-        data: Sequence[Union[float, int]],
-        /,
-        period: int = 1
-) -> Union[list[float], float, None]:
-    _len = len(data)
-    if period > _len:
-        print(f"Период {period} превышает длину массива {len(data)}")
+    def __setitem__(self, key: int, value):
+        if not isinstance(key, int) or key < 0:
+            raise TypeError("Индекс должен быть целым неотрицательным числом")
+
+        if key >= len(self.dataset):
+            off = key + 1 - len(self.dataset)
+            self.dataset.extend([None] * off)
+
+        self.dataset[key] = value
+
+    def __delitem__(self, key):
+        if not isinstance(key, int):
+            raise TypeError("Индекс должен быть целым числом")
+
+        del self.dataset[key]
+
+
+def moving_average(data: Sequence[Union[float, int]], /, period: int = 1) -> Union[list[float], float, None]:
+    length = len(data)
+    if period > length:
+        print(f"Период {period} превышает длину массива {length}")
         return None
-    elif period == _len:
+    elif period == length:
         return sum(data) / float(period)
 
-    if data is not list:
+    if not isinstance(data, list):
         data = list(data)
 
-    _avg: list[float] = []
-    # for i in range(_len - period + 1):
-    for i in range(period - 1, _len):
-        _sum = 0.0
+    avg = []
+    for i in range(length - period + 1):
+        avg.append(sum(data[i:period + i]) / float(period))
+        print("avg", avg, end="\n")
 
-        if i == period - 1:
-            items = data[i::-1]
-        else:
-            items = data[i:i - period:-1]
-        # j = i + period - 1
-        # for item in data[i:period + i]:
-        print(items)
-        for item in items:
-
-            _sum += item
-
-            # if j == item:
-            #     print(j)
-
-            # j += 1
-            print(i, item, _sum, sep="   ")
-
-        _avg.append(_sum / float(period))
-        print("avg", _avg, end="\n")
-
-    return _avg
+    return avg
 
 
 if __name__ == "__main__":
