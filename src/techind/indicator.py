@@ -1,14 +1,14 @@
 from typing import Any, Union, Sequence
 
 
-# from techind.symbol import Symbol
-# from techind.timeframe import Timeframe
+from techind.symbol import Symbol
+from techind.timeframe import Timeframe
 # Result = Union[Optional[list[Any]], str, int]
 # print(len(Symbol))
 # print(len(Timeframe))
 
 
-class Indicator:  # (Symbol, Timeframe):
+class Indicator: # (Symbol, Timeframe):
     """
     Indicator.
     """
@@ -17,9 +17,6 @@ class Indicator:  # (Symbol, Timeframe):
 
     def __init_subclass__(cls, **kwargs: Any) -> None:
         print("__init_subclass__:Indicator")
-
-    def __subclasscheck__(self, subclass: Any) -> None:
-        print("__subclasscheck__:Indicator", subclass)
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         print("__init__:Indicator", args)
@@ -52,10 +49,14 @@ class Indicator:  # (Symbol, Timeframe):
         del self.dataset[key]
 
 
-def moving_average(data: Sequence[Union[float, int]], /, period: int = 1) -> Union[list[float], float, None]:
+def moving_average(
+        data: Sequence[Union[float, int]],
+        /,
+        period: int = 1
+) -> Union[list[float], float, None]:
     length = len(data)
     if period > length:
-        print(f"Период {period} превышает длину массива {length}")
+        print(f"Период `{period=}` превышает длину массива `{length=}`")
         return None
     elif period == length:
         return sum(data) / float(period)
@@ -63,13 +64,13 @@ def moving_average(data: Sequence[Union[float, int]], /, period: int = 1) -> Uni
     if not isinstance(data, list):
         data = list(data)
 
-    avg = []
-    for i in range(length - period + 1):
-        avg.append(sum(data[i:period + i]) / float(period))
-        print("avg", avg, end="\n")
-
-    return avg
+    return [
+        sum(data[i:period + i]) / float(period)
+        for i in range(length - period + 1)
+    ]
 
 
 if __name__ == "__main__":
     print(moving_average([0, 1, 2, 3, 4, 5], 3))
+
+    print(Timeframe["H1"])

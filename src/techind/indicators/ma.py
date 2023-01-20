@@ -1,14 +1,13 @@
-from typing import Any, Optional, Union
+from typing import Any, Union, overload
+
+from techind.indicator import Indicator
 
 
-#from techind.indicator import Indicator
+# from techind.market import Market
+# class MA(Market):
 
 
-#class MA(Indicator):
-from techind.market import Market
-
-
-class MA(Market):
+class MA(Indicator):
     """
     Moving Average.
 
@@ -19,32 +18,28 @@ class MA(Market):
     * MA(dataset[:], period=24, method=0, price=0, shift=0)
     * MA("EURUSD", timeframe=1)
     * MA("EURUSD", timeframe=1, period=24, method=0, price=0, shift=0)
-    * MA(period=24, method=0, price=0, shift=0)
 
     Instance `ma = MA()`:
 
     * ma
     * ma[42]
-    * ma(period=24, method=0, price=0, shift=0)
-    * ma(period=24, method=0, price=0, shift=0)[42]
+    * ma(period=24, method=0, price=0, shift=0, bar=42)
     """
 
     name = "Moving Average"
     type = "MA"
     description = __doc__
 
-    def __subclasscheck__(self, subclass: Any) -> None:
-        print("__subclasscheck__:MA", subclass)
-
     def __init__(
             self,
             reader: Union[list[Any], str, None] = None,
-            timeframe: int = 1,
+            timeframe: int = Tim,
             *,
             period: int = 14,
             method: int = 0,
             price: int = 0,
-            shift: int = 0
+            shift: int = 0,
+            bar: int = 0
     ) -> None:
         print("__init__:MA", reader)
 
@@ -60,6 +55,7 @@ class MA(Market):
         self.method: int = method
         self.price: int = price
         self.shift: int = shift
+        self.bar: int = bar
 
 
 if __name__ == "__main__":

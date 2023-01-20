@@ -1,5 +1,5 @@
-<application>
-  <component name="CachedDictionaryState">
+<component name="ProjectDictionaryState">
+  <dictionary name="trader">
     <words>
       <w>audusd</w>
       <w>chfusd</w>
@@ -9,5 +9,5 @@
       <w>eurusd</w>
       <w>gbpusd</w>
     </words>
-  </component>
-</application>
+  </dictionary>
+</component>
