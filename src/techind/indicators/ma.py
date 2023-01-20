@@ -33,7 +33,7 @@ class MA(Indicator):
     def __init__(
             self,
             reader: Union[list[Any], str, None] = None,
-            timeframe: int = Tim,
+            timeframe: int = 1,
             *,
             period: int = 14,
             method: int = 0,
@@ -51,11 +51,13 @@ class MA(Indicator):
                 self.symbol: str = symbol
 
         self.timeframe = timeframe
-        self.period: int = period
-        self.method: int = method
-        self.price: int = price
-        self.shift: int = shift
-        self.bar: int = bar
+        self.period = period
+        self.method = method
+        self.price = price
+        self.shift = shift
+        self.bar = bar
+        
+        #super(MA, self).__init__()
 
 
 if __name__ == "__main__":

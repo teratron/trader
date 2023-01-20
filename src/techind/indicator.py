@@ -8,7 +8,7 @@ from techind.timeframe import Timeframe
 # print(len(Timeframe))
 
 
-class Indicator: # (Symbol, Timeframe):
+class Indicator:  # (Symbol, Timeframe):
     """
     Indicator.
     """
@@ -17,6 +17,7 @@ class Indicator: # (Symbol, Timeframe):
 
     def __init_subclass__(cls, **kwargs: Any) -> None:
         print("__init_subclass__:Indicator")
+        super().__init_subclass__(**kwargs)
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         print("__init__:Indicator", args)
@@ -32,7 +33,7 @@ class Indicator: # (Symbol, Timeframe):
         else:
             raise IndexError("Неверный индекс")
 
-    def __setitem__(self, key: int, value):
+    def __setitem__(self, key: int, value) -> None:
         if not isinstance(key, int) or key < 0:
             raise TypeError("Индекс должен быть целым неотрицательным числом")
 
@@ -42,7 +43,7 @@ class Indicator: # (Symbol, Timeframe):
 
         self.dataset[key] = value
 
-    def __delitem__(self, key):
+    def __delitem__(self, key) -> None:
         if not isinstance(key, int):
             raise TypeError("Индекс должен быть целым числом")
 
