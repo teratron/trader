@@ -2,7 +2,7 @@ from datetime import datetime
 
 import MetaTrader5 as mt5
 
-from techind.indicators.ma import MA
+from techind.ma import MA
 
 if __name__ == "__main__":
     if not mt5.initialize():

@@ -1,7 +1,4 @@
-from enum import IntEnum
-
-
-class Timeframe(IntEnum):
+class Timeframe:  # (IntEnum):
     # TICK = 0
     # TIMEFRAME_M1 = 1
     # TIMEFRAME_M5 = 2

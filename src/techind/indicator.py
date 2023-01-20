@@ -1,14 +1,15 @@
 from typing import Any, Union, Sequence
 
-
 from techind.symbol import Symbol
 from techind.timeframe import Timeframe
+
+
 # Result = Union[Optional[list[Any]], str, int]
 # print(len(Symbol))
 # print(len(Timeframe))
 
 
-class Indicator:  # (Symbol, Timeframe):
+class Indicator(Symbol, Timeframe):
     """
     Indicator.
     """
@@ -74,4 +75,4 @@ def moving_average(
 if __name__ == "__main__":
     print(moving_average([0, 1, 2, 3, 4, 5], 3))
 
-    print(Timeframe["H1"])
+    # print(Timeframe["H1"])

@@ -1,4 +1,4 @@
-from typing import Any, Union, overload
+from typing import Any, Union
 
 from techind.indicator import Indicator
 
@@ -56,13 +56,12 @@ class MA(Indicator):
         self.price = price
         self.shift = shift
         self.bar = bar
-        
+
         #super(MA, self).__init__()
 
 
 if __name__ == "__main__":
     # ma = MA(ind.EURUSD, ind.TIMEFRAME_M1)
-
     # ma = MA()
     # print(ma(42))
 
