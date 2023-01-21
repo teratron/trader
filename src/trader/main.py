@@ -7,6 +7,7 @@ from techind.ma import MA
 if __name__ == "__main__":
     if not mt5.initialize():
         print("initialize failed")
+        quit()
     else:
         print(mt5.version())
         print(mt5.terminal_info())
@@ -40,7 +41,7 @@ if __name__ == "__main__":
         for val in eurcad_rates[:10]:
             print(val)
 
-    mt5.shutdown()
+        mt5.shutdown()
 
     ma = MA()
     print(ma)

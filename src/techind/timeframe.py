@@ -1,4 +1,9 @@
 class Timeframe:  # (IntEnum):
+    """
+    Timeframe.
+    """
+    # print("Timeframe")
+
     # TICK = 0
     # TIMEFRAME_M1 = 1
     # TIMEFRAME_M5 = 2

@@ -1,3 +1,4 @@
+from abc import ABC, abstractmethod
 from typing import Any, Union, Sequence
 
 from techind.symbol import Symbol
@@ -9,32 +10,34 @@ from techind.timeframe import Timeframe
 # print(len(Timeframe))
 
 
-class Indicator(Symbol, Timeframe):
-    """
-    Indicator.
+class Indicator(ABC, Symbol, Timeframe):
+    """Indicator.
     """
 
     dataset: list[Any] = []
 
+    print("Indicator")
+
     def __init_subclass__(cls, **kwargs: Any) -> None:
-        print("__init_subclass__:Indicator")
-        super().__init_subclass__(**kwargs)
+        print("__init_subclass__:Indicator", cls, kwargs)
+        #super().__init_subclass__(**kwargs)
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
-        print("__init__:Indicator", args)
+        print("__init__:Indicator", args, self)
         self.dataset = args[0]
 
     def __call__(self, *args: Any, **kwargs: Any) -> Any:
-        print("__call__:Indicator", *args)
+        print("__call__:Indicator", args)
         return args[0]
 
     def __getitem__(self, item: int) -> Any:
         if 0 <= item < len(self.dataset):
+            print("__getitem__", self.calc(24))
             return self.dataset[item]
         else:
             raise IndexError("Неверный индекс")
 
-    def __setitem__(self, key: int, value) -> None:
+    def __setitem__(self, key: int, value: float) -> None:
         if not isinstance(key, int) or key < 0:
             raise TypeError("Индекс должен быть целым неотрицательным числом")
 
@@ -44,11 +47,21 @@ class Indicator(Symbol, Timeframe):
 
         self.dataset[key] = value
 
-    def __delitem__(self, key) -> None:
+    def __delitem__(self, key: int) -> None:
         if not isinstance(key, int):
             raise TypeError("Индекс должен быть целым числом")
 
         del self.dataset[key]
+
+    # def __repr__(self):
+    #     print(self, self.__hash__())
+
+    def __enter__(self) -> None:
+        print("__enter__:Indicator")
+
+    @abstractmethod
+    def calc(self, bar: int) -> float:
+        pass
 
 
 def moving_average(
@@ -73,6 +86,6 @@ def moving_average(
 
 
 if __name__ == "__main__":
-    print(moving_average([0, 1, 2, 3, 4, 5], 3))
-
-    # print(Timeframe["H1"])
+    print("+")
+#     print(moving_average([0, 1, 2, 3, 4, 5], 3))
+#     print(Timeframe["H1"])
