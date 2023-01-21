@@ -1,6 +1,6 @@
-from typing import Any, Union
+from typing import Any, Union, Optional
 
-from techind.indicator import Indicator
+from techind.indicator import Indicator, Result, moving_average
 
 
 # from techind.market import Market
@@ -64,13 +64,16 @@ class MA(Indicator):
         self.price = price
         self.shift = shift
         self.bar = bar
-        self.ma = self
+        # self.ma = self
 
-        #super(MA, self).__init__()
+        # super(MA, self).__init__()
 
-    def calc(self, bar: int) -> float:
-        print("calc:MA", self, bar)
-        return 42.2568
+    def calculate(self, *, bar: Optional[int] = None) -> Result:
+        # i = bar + 1
+        # print("calculate:MA", self, bar, self.dataset[i - self.period:i], self.dataset[bar:bar + self.period])
+
+        if bar is not None:
+            return moving_average(self.dataset[bar:bar + self.period], self.period)
 
 
 if __name__ == "__main__":
@@ -78,12 +81,12 @@ if __name__ == "__main__":
     # ma = MA()
     # print(ma(42))
 
-    ma1 = MA([1.32, 2.7, 3.92])
-    #print(ma1(43))
+    ma1 = MA([0.0, 1.0, 2.0, 3.0, 4.0, 5.0], period=3)
+    # print(ma1(43))
     print(ma1[2])
-    #ma1[2] = 9.61
-    #print(ma1[2])
-    #print(ma1.ma)
+    # ma1[2] = 9.61
+    # print(ma1[2])
+    # print(ma1.ma)
 
     # ma2 = MA([1, 2, 3], period=24, method=0, price=0, shift=0)
     # print(ma2.dataset)
@@ -95,4 +98,4 @@ if __name__ == "__main__":
     #
     # ma5 = MA(period=24, method=0, price=0, shift=0)
 
-    #print("-")
+    # print("-")

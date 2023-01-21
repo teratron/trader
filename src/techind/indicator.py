@@ -1,8 +1,11 @@
 from abc import ABC, abstractmethod
+
 from typing import Any, Union, Sequence
 
 from techind.symbol import Symbol
 from techind.timeframe import Timeframe
+
+Result = Union[list[float], float, None]
 
 
 # Result = Union[Optional[list[Any]], str, int]
@@ -20,7 +23,7 @@ class Indicator(ABC, Symbol, Timeframe):
 
     def __init_subclass__(cls, **kwargs: Any) -> None:
         print("__init_subclass__:Indicator", cls, kwargs)
-        #super().__init_subclass__(**kwargs)
+        # super().__init_subclass__(**kwargs)
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         print("__init__:Indicator", args, self)
@@ -30,10 +33,9 @@ class Indicator(ABC, Symbol, Timeframe):
         print("__call__:Indicator", args)
         return args[0]
 
-    def __getitem__(self, item: int) -> Any:
-        if 0 <= item < len(self.dataset):
-            print("__getitem__", self.calc(24))
-            return self.dataset[item]
+    def __getitem__(self, key: int) -> Result:
+        if 0 <= key < len(self.dataset):
+            return self.calculate(bar=key)
         else:
             raise IndexError("Неверный индекс")
 
@@ -53,14 +55,11 @@ class Indicator(ABC, Symbol, Timeframe):
 
         del self.dataset[key]
 
-    # def __repr__(self):
-    #     print(self, self.__hash__())
-
     def __enter__(self) -> None:
         print("__enter__:Indicator")
 
     @abstractmethod
-    def calc(self, bar: int) -> float:
+    def calculate(self, *args: Any, **kwargs: Any) -> Result:
         pass
 
 
@@ -68,7 +67,8 @@ def moving_average(
         data: Sequence[Union[float, int]],
         /,
         period: int = 1
-) -> Union[list[float], float, None]:
+) -> Result:
+    """Скользящая средняя."""
     length = len(data)
     if period > length:
         print(f"Период `{period=}` превышает длину массива `{length=}`")
@@ -86,6 +86,5 @@ def moving_average(
 
 
 if __name__ == "__main__":
-    print("+")
-#     print(moving_average([0, 1, 2, 3, 4, 5], 3))
+    print(moving_average([0, 1, 2, 3, 4, 5], 3))
 #     print(Timeframe["H1"])
