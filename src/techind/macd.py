@@ -23,8 +23,8 @@ class MACD(MA):
 
     print("MACD")
 
-    fast_ema = MA()
-    slow_ema = MA()
+    fast_ema = MA
+    slow_ema = MA
 
     def __init__(
             self,

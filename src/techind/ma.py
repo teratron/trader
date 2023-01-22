@@ -1,11 +1,10 @@
-from typing import Any, Union, Optional
+from typing import Any, Union, Optional, Sequence
 
 from techind.indicator import Indicator, Result, moving_average
 
 
 # from techind.market import Market
 # class MA(Market):
-
 
 class MA(Indicator):
     """Moving Average.
@@ -32,6 +31,15 @@ class MA(Indicator):
     );
     """
 
+    __slots__: tuple[str, ...] = (
+        "reader",
+        "timeframe",
+        "period",
+        "method",
+        "price",
+        "shift"
+    )
+
     name = "Moving Average"
     type = "MA"
     description = __doc__
@@ -46,8 +54,7 @@ class MA(Indicator):
             period: int = 14,
             method: int = 0,
             price: int = 0,
-            shift: int = 0,
-            bar: int = 0
+            shift: int = 0
     ) -> None:
         print("__init__:MA", self)
 
@@ -63,10 +70,28 @@ class MA(Indicator):
         self.method = method
         self.price = price
         self.shift = shift
-        self.bar = bar
+        self.props = self.__dict__
+        # self.bar = bar
         # self.ma = self
 
+        self.__slots__ = (
+            "period",
+            "method",
+            "price",
+            "shift",
+            "bar"
+        )
+
         # super(MA, self).__init__()
+
+    def __call__(self, **kwargs: Any) -> Any:
+        print("__call__:Indicator")
+        print(kwargs)
+        print(self.props)
+        print(MA.__slots__)
+        print(self.__slots__)
+
+        return None
 
     def calculate(self, *, bar: Optional[int] = None) -> Result:
         # i = bar + 1
@@ -74,6 +99,8 @@ class MA(Indicator):
 
         if bar is not None:
             return moving_average(self.dataset[bar:bar + self.period], self.period)
+
+        return None
 
 
 if __name__ == "__main__":
@@ -87,6 +114,7 @@ if __name__ == "__main__":
     # ma1[2] = 9.61
     # print(ma1[2])
     # print(ma1.ma)
+    print(ma1(period=7, method=0, price=0))
 
     # ma2 = MA([1, 2, 3], period=24, method=0, price=0, shift=0)
     # print(ma2.dataset)

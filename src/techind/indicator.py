@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-
 from typing import Any, Union, Sequence
 
 from techind.symbol import Symbol
@@ -63,11 +62,7 @@ class Indicator(ABC, Symbol, Timeframe):
         pass
 
 
-def moving_average(
-        data: Sequence[Union[float, int]],
-        /,
-        period: int = 1
-) -> Result:
+def moving_average(data: Sequence[Union[float, int]], /, period: int = 1) -> Result:
     """Скользящая средняя."""
     length = len(data)
     if period > length:
