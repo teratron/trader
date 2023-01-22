@@ -1,12 +1,34 @@
-from typing import Any, Union, Optional, Sequence
+from typing import Any, Union, Optional
 
 from techind.indicator import Indicator, Result, moving_average
 
 
 # from techind.market import Market
 # class MA(Market):
+class Properties:
+    __slots__ = (
+        "period",
+        "method",
+        "price",
+        "shift"
+    )
 
-class MA(Indicator):
+    def __init__(
+            self,
+            *,
+            period: int = 14,
+            method: int = 0,
+            price: int = 0,
+            shift: int = 0
+    ) -> None:
+        # super().__init__()
+        self.period = period
+        self.method = method
+        self.price = price
+        self.shift = shift
+
+
+class MA(Indicator, Properties):
     """Moving Average.
 
     Class `MA`:
@@ -31,30 +53,33 @@ class MA(Indicator):
     );
     """
 
-    __slots__: tuple[str, ...] = (
-        "reader",
-        "timeframe",
-        "period",
-        "method",
-        "price",
-        "shift"
-    )
+    # __slots__: tuple[str, ...] = (
+    #     "reader",
+    #     "timeframe",
+    #     "period",
+    #     "method",
+    #     "price",
+    #     "shift",
+    #     "bar"
+    # )
 
     name = "Moving Average"
     type = "MA"
     description = __doc__
 
     print("MA")
+    props = dict()
 
     def __init__(
             self,
             reader: Union[list[Any], str, None] = None,
             timeframe: int = 1,
-            *,
-            period: int = 14,
-            method: int = 0,
-            price: int = 0,
-            shift: int = 0
+            # *,
+            # period: int = 14,
+            # method: int = 0,
+            # price: int = 0,
+            # shift: int = 0
+            **kwargs
     ) -> None:
         print("__init__:MA", self)
 
@@ -66,37 +91,45 @@ class MA(Indicator):
                 self.symbol = symbol
 
         self.timeframe = timeframe
-        self.period = period
-        self.method = method
-        self.price = price
-        self.shift = shift
-        self.props = self.__dict__
+        # self.period = period
+        # self.method = method
+        # self.price = price
+        # self.shift = shift
+        # self.props = self.__dict__
         # self.bar = bar
         # self.ma = self
 
-        self.__slots__ = (
-            "period",
-            "method",
-            "price",
-            "shift",
-            "bar"
-        )
+        # Properties.__init__(self, **kwargs)
+
+        # self.props = self.__dict__
+
+        # self.__slots__ = (
+        #     "period",
+        #     "method",
+        #     "price",
+        #     "shift",
+        #     "bar"
+        # )
 
         # super(MA, self).__init__()
 
-    def __call__(self, **kwargs: Any) -> Any:
+    def __call__(
+            self,
+            **kwargs
+            # period: int = 14,
+            # method: int = 0,
+            # price: int = 0,
+            # shift: int = 0
+    ) -> Any:
         print("__call__:Indicator")
-        print(kwargs)
-        print(self.props)
-        print(MA.__slots__)
-        print(self.__slots__)
+        print("kwargs", kwargs)
+        # print(self.props)
+        # print(MA.__slots__)
+        # print(self.__slots__)
 
         return None
 
     def calculate(self, *, bar: Optional[int] = None) -> Result:
-        # i = bar + 1
-        # print("calculate:MA", self, bar, self.dataset[i - self.period:i], self.dataset[bar:bar + self.period])
-
         if bar is not None:
             return moving_average(self.dataset[bar:bar + self.period], self.period)
 
@@ -109,12 +142,12 @@ if __name__ == "__main__":
     # print(ma(42))
 
     ma1 = MA([0.0, 1.0, 2.0, 3.0, 4.0, 5.0], period=3)
-    # print(ma1(43))
+    print(ma1(period=7, method=1, price=3))
     print(ma1[2])
     # ma1[2] = 9.61
     # print(ma1[2])
     # print(ma1.ma)
-    print(ma1(period=7, method=0, price=0))
+    #print(ma1(period=7, method=0, price=0, id=33))
 
     # ma2 = MA([1, 2, 3], period=24, method=0, price=0, shift=0)
     # print(ma2.dataset)
@@ -127,3 +160,6 @@ if __name__ == "__main__":
     # ma5 = MA(period=24, method=0, price=0, shift=0)
 
     # print("-")
+
+    # pr = Properties()
+    #print(pr.__dict__)

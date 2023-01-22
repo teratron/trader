@@ -1,9 +1,7 @@
 from typing import Any, Optional, overload
 
-from techind.indicator import Indicator
 
-
-class Market(Indicator):
+class Market:
     symbol: str = "EURUSD"
     timeframe: int = 1
 
