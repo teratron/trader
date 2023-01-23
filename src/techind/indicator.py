@@ -12,23 +12,22 @@ class Indicator(ABC, Symbol, Timeframe):
     """Indicator.
     """
 
-    _slots_ = [
-        Symbol._slots_,
-        Timeframe._slots_
-    ]
+    # _slots_ = [
+    #     Symbol._slots_,
+    #     Timeframe._slots_
+    # ]
 
-    dataset: Optional[list[Any]] = None
+    dataset: Optional[list[Any]] = [0.0, 1.0, 2.0, 3.0, 4.0, 5.0]
 
-    def __init_subclass__(cls, **kwargs: Any) -> None:
-        print("__init_subclass__:Indicator", cls, kwargs)
-        # super().__init_subclass__(**kwargs)
+    # def __init_subclass__(cls, **kwargs: Any) -> None:
+    #     print("__init_subclass__:Indicator")
+    #     super().__init_subclass__(**kwargs)
 
     def __init__(
             self,
-            /,
-            symbol: Optional[str],
+            symbol: str,
             timeframe: int,
-            # *args: Any,
+            # *args,
             **kwargs: Any
     ) -> None:
         Symbol.__init__(self, symbol)
@@ -36,11 +35,11 @@ class Indicator(ABC, Symbol, Timeframe):
         # Symbol.__init__(self, args[0])
         # Timeframe.__init__(self, args[1])
         # print("__init__:Indicator", args)
-        self.dataset = [0.0, 1.0, 2.0, 3.0, 4.0, 5.0]
+        #self.dataset = [0.0, 1.0, 2.0, 3.0, 4.0, 5.0]
 
     def __call__(self, *args: Any, **kwargs: Any) -> Any:
         print("__call__:Indicator", args)
-        return args[0]
+        return 28.9
 
     def __getitem__(self, key: int) -> Result:
         if 0 <= key < len(self.dataset):

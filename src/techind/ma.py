@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Optional, Any
 
 from techind.indicator import Indicator, Result, moving_average
 
@@ -7,13 +7,13 @@ class Properties:
     """Properties.
     """
 
-    _slots_ = (
-        "period",
-        "method",
-        "price",
-        "shift",
-        # "bar"
-    )
+    # _slots_ = (
+    #     "period",
+    #     "method",
+    #     "price",
+    #     "shift",
+    #     # "bar"
+    # )
 
     # props = {
     #     "period":  14,
@@ -22,29 +22,46 @@ class Properties:
     #     "shift": 0
     # }
 
-    props: dict[str, Any] = {}
-
-    def __init_subclass__(cls, **kwargs: Any) -> None:
-        print("__init_subclass__:Indicator", cls, kwargs)
-        # super().__init_subclass__(**kwargs)
+    # period: int
+    # method: int
+    # price: int
+    # shift: int
 
     def __init__(
             self,
+            # *args,
             *,
             period: int = 14,
             method: int = 0,
             price: int = 0,
             shift: int = 0
     ) -> None:
-        self.period = period
+        print("__init__:Properties")
+        self._period = period
         self.method = method
         self.price = price
         self.shift = shift
-        self.props = self.__dict__
-        # self.props2 = self.props.pop("props")
-        # super().__init__()
 
-        # print("dir", self.props.pop("props"))
+    @property
+    def period(self) -> int:
+        return self._period
+
+    @period.setter
+    def period(self, value: int) -> None:
+        if 0 < value < 1000:
+            self._period = value
+        else:
+            raise ValueError("d,dd,d")
+
+    # super().__init__(self.__dict__)
+
+    # def __getitem__(self, key: Any) -> Any:
+    #     return self.__dict__[key]
+
+    # self.props2 = self.props.pop("props")
+    # super().__init__()
+
+    # print("dir", self.props.pop("props"))
 
     # def __dir__(self) -> Iterable[str]:
     #     print(self)
@@ -54,9 +71,6 @@ class MA(Indicator, Properties):
     """Moving Average.
 
     Class `MA`:
-    * MA()
-    * MA(dataset[:])
-    * MA(dataset[:], period=24, method=0, price=0, shift=0)
     * MA("EURUSD", timeframe=1)
     * MA("EURUSD", timeframe=1, period=24, method=0, price=0, shift=0)
 
@@ -76,27 +90,47 @@ class MA(Indicator, Properties):
     );
     """
 
-    # _slots_ = list(Indicator._slots_).extend(list(Properties._slots_))
-    # a = Indicator._slots_
-    Indicator._slots_.extend(Properties._slots_)
-    print(Indicator._slots_)
-
+    # Indicator._slots_.extend(Properties._slots_)
+    # print(Indicator._slots_)
     # __slots__ = tuple(Indicator._slots_)
+
+    # __slots__ = (
+    #     "period",
+    #     "method",
+    #     "price",
+    #     "shift",
+    #     # "bar"
+    # )
 
     name = "Moving Average"
     type = "MA"
     description = __doc__
     buffer: Optional[list[float]] = None
+    bar: int = 0
 
-    # print(Properties.__dict__)
-
-    print("dir", Properties.props)
-
-    def __init__(self, *args, **kwargs) -> None:
-        print("__init__:MA", self, args, kwargs)
-
+    def __init__(
+            self,
+            # /,
+            # symbol: Optional[str]=None,
+            # timeframe: int=Indicator.TIMEFRAME_H1,
+            *args: Ellipsis,  # [str, int],
+            **kwargs: Any
+            # *,
+            # period: int = 14,
+            # method: int = 0,
+            # price: int = 0,
+            # shift: int = 0
+    ) -> None:
+        # print("__init__:MA", self, args, kwargs)
+        # super().__init__(symbol, timeframe)
         super().__init__(*args)
         Properties.__init__(self, **kwargs)
+        # self.period = period
+        # self.method = method
+        # self.price = price
+        # self.shift = shift
+        # self.props = self.__dir__()
+        # print("pr", self.props)
 
         # self.props = self.__dict__
 
@@ -110,23 +144,31 @@ class MA(Indicator, Properties):
 
         # super(MA, self).__init__()
 
+    # def _get_props(self, d):
+    #     a = d.pop("props")
+    #     print("a", a)
+    #     return a
+
     def __call__(
             self,
-            **kwargs
+            # *,
             # period: int = 14,
             # method: int = 0,
             # price: int = 0,
-            # shift: int = 0
-    ) -> Any:
-        print("__call__:Indicator")
-        print("kwargs", kwargs)
-        # print(self.props)
-        # print(MA.__slots__)
-        # print(self.__slots__)
+            # shift: int = 0,
+            *,
+            bar: int = 0,
+            **kwargs,
+    ) -> Result:
+        print("__call__:Indicator", kwargs)
+        print("kwargs", self.__dict__)
+        Properties.__init__(self, **kwargs)
+        self.bar = bar
 
-        return None
+        return self.calculate(bar=bar)
 
     def calculate(self, *, bar: Optional[int] = None) -> Result:
+        print(self.dataset)
         if bar is not None:
             return moving_average(self.dataset[bar:bar + self.period], self.period)
 
@@ -134,29 +176,23 @@ class MA(Indicator, Properties):
 
 
 if __name__ == "__main__":
-    # ma = MA(ind.EURUSD, ind.TIMEFRAME_M1)
-    # ma = MA()
-    # print(ma(42))
-
-    ma1 = MA("EURUSD", 1, period=3, )
-    print(ma1(period=7, method=1, price=3))
-    print(ma1[2])
+    ma1 = MA(MA.TIMEFRAME_H1, "EURUSD", period=3, method=0)
+    print(ma1(period=7, method=1, price=3, shift=0))
+    # print(ma1[2])
     # ma1[2] = 9.61
     # print(ma1[2])
-    # print(ma1.ma)
-    #print(ma1(period=7, method=0, price=0, id=33))
-
-    # ma2 = MA([1, 2, 3], period=24, method=0, price=0, shift=0)
-    # print(ma2.dataset)
-    #
-    # ma3 = MA("EURUSD", 1)
-    # print(ma3.dataset)
-    #
-    # ma4 = MA("EURUSD", timeframe=1, period=24, method=0, price=0, shift=0)
-    #
-    # ma5 = MA(period=24, method=0, price=0, shift=0)
-
-    # print("-")
+    print(ma1.__dict__)
+    ma1.symbol = "CHFUSD"
 
     # pr = Properties()
-    #print(pr.__dict__)
+    # print(pr, pr["period"])
+
+    # ma2 = MA("EURUSD", Indicator.TIMEFRAME_H1, period=3, method=0)
+    # ma3 = MA("EURUSD", Indicator.TIMEFRAME_H1, period=3, method=0)
+    # print(ma2.name, ma3.name, MA.name)
+    #
+    # ma2.name = "123"
+    # print(ma2.name, ma3.name, MA.name)
+    #
+    # MA.name = "987"
+    # print(ma2.name, ma3.name, MA.name)

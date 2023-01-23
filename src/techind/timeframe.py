@@ -2,7 +2,7 @@ class Timeframe:  # (IntEnum):
     """Timeframe.
     """
 
-    _slots_ = "_timeframe"
+    # _slots_ = "_timeframe"
 
     TICK = 0
     TIMEFRAME_M1 = M1 = 1
