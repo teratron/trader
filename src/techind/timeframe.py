@@ -1,36 +1,37 @@
 class Timeframe:  # (IntEnum):
+    """Timeframe.
     """
-    Timeframe.
-    """
-    # print("Timeframe")
 
-    # TICK = 0
-    # TIMEFRAME_M1 = 1
-    # TIMEFRAME_M5 = 2
-    # TIMEFRAME_M15 = 3
-    # TIMEFRAME_M30 = 4
-    # TIMEFRAME_H1 = 5
-    # TIMEFRAME_H4 = 6
-    # TIMEFRAME_D1 = 7
-    # TIMEFRAME_Y1 = 8
+    _slots_ = "_timeframe"
 
     TICK = 0
-    M1 = 1
-    M5 = 2
-    M15 = 3
-    M30 = 4
-    H1 = 5
-    H4 = 6
-    D1 = 7
-    Y1 = 8
+    TIMEFRAME_M1 = M1 = 1
+    TIMEFRAME_M5 = M5 = 2
+    TIMEFRAME_M15 = M15 = 3
+    TIMEFRAME_M30 = M30 = 4
+    TIMEFRAME_H1 = H1 = 5
+    TIMEFRAME_H4 = H4 = 6
+    TIMEFRAME_D1 = D1 = 7
+    TIMEFRAME_Y1 = Y1 = 8
+
+    def __init__(self, timeframe: int) -> None:
+        self._timeframe = timeframe
+
+    @property
+    def timeframe(self) -> int:
+        return self._timeframe
+
+    @timeframe.setter
+    def timeframe(self, value: int) -> None:
+        self._timeframe = value
 
     # @classmethod
     # def __getattr__(cls, item):
     #     return cls[item].value
 
-    @classmethod
-    def __call__(cls, item):
-        return cls[item].value
+    # @classmethod
+    # def __call__(cls, item):
+    #     return cls[item].value
 
 # print(Timeframe["M1"])
 # print(Timeframe["TIMEFRAME_M1"])

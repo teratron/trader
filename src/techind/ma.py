@@ -1,17 +1,32 @@
-from typing import Any, Union, Optional
+from typing import Any, Optional
 
 from techind.indicator import Indicator, Result, moving_average
 
 
-# from techind.market import Market
-# class MA(Market):
 class Properties:
-    __slots__ = (
+    """Properties.
+    """
+
+    _slots_ = (
         "period",
         "method",
         "price",
-        "shift"
+        "shift",
+        # "bar"
     )
+
+    # props = {
+    #     "period":  14,
+    #     "method": 0,
+    #     "price": 0,
+    #     "shift": 0
+    # }
+
+    props: dict[str, Any] = {}
+
+    def __init_subclass__(cls, **kwargs: Any) -> None:
+        print("__init_subclass__:Indicator", cls, kwargs)
+        # super().__init_subclass__(**kwargs)
 
     def __init__(
             self,
@@ -21,11 +36,18 @@ class Properties:
             price: int = 0,
             shift: int = 0
     ) -> None:
-        # super().__init__()
         self.period = period
         self.method = method
         self.price = price
         self.shift = shift
+        self.props = self.__dict__
+        # self.props2 = self.props.pop("props")
+        # super().__init__()
+
+        # print("dir", self.props.pop("props"))
+
+    # def __dir__(self) -> Iterable[str]:
+    #     print(self)
 
 
 class MA(Indicator, Properties):
@@ -41,6 +63,7 @@ class MA(Indicator, Properties):
     Instance `ma = MA()`:
     * ma
     * ma[42]
+    * ma[:42]
     * ma(period=24, method=0, price=0, shift=0, bar=42)
 
     int iMA(
@@ -53,53 +76,27 @@ class MA(Indicator, Properties):
     );
     """
 
-    # __slots__: tuple[str, ...] = (
-    #     "reader",
-    #     "timeframe",
-    #     "period",
-    #     "method",
-    #     "price",
-    #     "shift",
-    #     "bar"
-    # )
+    # _slots_ = list(Indicator._slots_).extend(list(Properties._slots_))
+    # a = Indicator._slots_
+    Indicator._slots_.extend(Properties._slots_)
+    print(Indicator._slots_)
+
+    # __slots__ = tuple(Indicator._slots_)
 
     name = "Moving Average"
     type = "MA"
     description = __doc__
+    buffer: Optional[list[float]] = None
 
-    print("MA")
-    props = dict()
+    # print(Properties.__dict__)
 
-    def __init__(
-            self,
-            reader: Union[list[Any], str, None] = None,
-            timeframe: int = 1,
-            # *,
-            # period: int = 14,
-            # method: int = 0,
-            # price: int = 0,
-            # shift: int = 0
-            **kwargs
-    ) -> None:
-        print("__init__:MA", self)
+    print("dir", Properties.props)
 
-        match reader:
-            case list() as dataset:
-                super().__init__(dataset)
-                self.dataset = dataset
-            case str() as symbol:
-                self.symbol = symbol
+    def __init__(self, *args, **kwargs) -> None:
+        print("__init__:MA", self, args, kwargs)
 
-        self.timeframe = timeframe
-        # self.period = period
-        # self.method = method
-        # self.price = price
-        # self.shift = shift
-        # self.props = self.__dict__
-        # self.bar = bar
-        # self.ma = self
-
-        # Properties.__init__(self, **kwargs)
+        super().__init__(*args)
+        Properties.__init__(self, **kwargs)
 
         # self.props = self.__dict__
 
@@ -141,7 +138,7 @@ if __name__ == "__main__":
     # ma = MA()
     # print(ma(42))
 
-    ma1 = MA([0.0, 1.0, 2.0, 3.0, 4.0, 5.0], period=3)
+    ma1 = MA("EURUSD", 1, period=3, )
     print(ma1(period=7, method=1, price=3))
     print(ma1[2])
     # ma1[2] = 9.61

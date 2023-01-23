@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from typing import Any, Union, Sequence
+from typing import Any, Union, Optional, Sequence
 
 from techind.symbol import Symbol
 from techind.timeframe import Timeframe
@@ -8,26 +8,35 @@ from techind.timeframe import Timeframe
 Result = Union[list[float], float, None]
 
 
-# Result = Union[Optional[list[Any]], str, int]
-# print(len(Symbol))
-# print(len(Timeframe))
-
-
 class Indicator(ABC, Symbol, Timeframe):
     """Indicator.
     """
 
-    dataset: list[Any] = []
+    _slots_ = [
+        Symbol._slots_,
+        Timeframe._slots_
+    ]
 
-    print("Indicator")
+    dataset: Optional[list[Any]] = None
 
     def __init_subclass__(cls, **kwargs: Any) -> None:
         print("__init_subclass__:Indicator", cls, kwargs)
         # super().__init_subclass__(**kwargs)
 
-    def __init__(self, *args: Any, **kwargs: Any) -> None:
-        print("__init__:Indicator", args, self)
-        self.dataset = args[0]
+    def __init__(
+            self,
+            /,
+            symbol: Optional[str],
+            timeframe: int,
+            # *args: Any,
+            **kwargs: Any
+    ) -> None:
+        Symbol.__init__(self, symbol)
+        Timeframe.__init__(self, timeframe)
+        # Symbol.__init__(self, args[0])
+        # Timeframe.__init__(self, args[1])
+        # print("__init__:Indicator", args)
+        self.dataset = [0.0, 1.0, 2.0, 3.0, 4.0, 5.0]
 
     def __call__(self, *args: Any, **kwargs: Any) -> Any:
         print("__call__:Indicator", args)
@@ -80,7 +89,6 @@ def moving_average(data: Sequence[Union[float, int]], /, period: int) -> Result:
         for i in range(length - period + 1)
     ]
 
-
-if __name__ == "__main__":
-    print(moving_average([0, 1, 2, 3, 4, 5], 3))
+# if __name__ == "__main__":
+#     print(moving_average([0, 1, 2, 3, 4, 5], 3))
 #     print(Timeframe["H1"])
