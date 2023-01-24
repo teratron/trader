@@ -1,4 +1,4 @@
-from techind.ma import MA
+from techind.indicators.ma import MA
 
 
 class MACD(MA):
