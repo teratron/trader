@@ -1,10 +1,13 @@
 from abc import ABC, abstractmethod
+
 from typing import Any, Union, Optional, Sequence
 
 from techind.properties.symbol import Symbol
 from techind.properties.timeframe import Timeframe
 
-Result = Union[list[Optional[float]], float, None]
+ResultType = Union[list[Optional[float]], float, None]
+BarType = Union[int, slice, None]
+DataType = Sequence[Union[float, int]]
 
 
 class Indicator(ABC, Symbol, Timeframe):
@@ -30,7 +33,7 @@ class Indicator(ABC, Symbol, Timeframe):
         print("__call__:Indicator", args)
         return 28.9
 
-    def __getitem__(self, key: int) -> Result:
+    def __getitem__(self, key: BarType) -> ResultType:
         if isinstance(self.dataset, list) and 0 <= key < len(self.dataset):
             return self.calculate(bar=key)
         else:
@@ -47,19 +50,12 @@ class Indicator(ABC, Symbol, Timeframe):
 
             self.dataset[key] = value
 
-    def __delitem__(self, key: int) -> None:
-        if not isinstance(key, int):
-            raise TypeError("Индекс должен быть целым числом")
-
-        if isinstance(self.dataset, list):
-            del self.dataset[key]
-
     @abstractmethod
-    def calculate(self, *args: Any, **kwargs: Any) -> Result:
-        pass
+    def calculate(self, *args: Any, **kwargs: Any) -> ResultType:
+        ...
 
 
-def moving_average(data: Sequence[Union[float, int]], period: int) -> Result:
+def moving_average(data: DataType, period: int) -> ResultType:
     """Скользящая средняя."""
     length = len(data)
     if period > length:

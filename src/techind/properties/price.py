@@ -1,7 +1,5 @@
 class Price:
     """Price.
-
-    Ценовые константы.
     """
 
     CLOSE = 0
