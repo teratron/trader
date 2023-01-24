@@ -1,8 +1,8 @@
-class Timeframe:  # (IntEnum):
+class Timeframe:
     """Timeframe.
     """
 
-    # _slots_ = "_timeframe"
+    slots = "_timeframe"
 
     TICK = 0
     TIMEFRAME_M1 = M1 = 1
@@ -24,14 +24,3 @@ class Timeframe:  # (IntEnum):
     @timeframe.setter
     def timeframe(self, value: int) -> None:
         self._timeframe = value
-
-    # @classmethod
-    # def __getattr__(cls, item):
-    #     return cls[item].value
-
-    # @classmethod
-    # def __call__(cls, item):
-    #     return cls[item].value
-
-# print(Timeframe["M1"])
-# print(Timeframe["TIMEFRAME_M1"])
