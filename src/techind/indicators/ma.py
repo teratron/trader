@@ -1,4 +1,4 @@
-from typing import Optional, Union
+from typing import Optional
 
 from techind.indicator import Indicator, Result, moving_average
 from techind.properties.method import Method
@@ -11,12 +11,12 @@ class Properties(Period, Method, Price, Shift):
     """Properties.
     """
 
-    slots: Union[list[str], str] = [
-        # Period.slots,
-        "_method",
-        "_price",
-        "_shift"
-    ]
+    # slots: Union[list[str], str] = [
+    #     Period.slots,
+    #     "_method",
+    #     "_price",
+    #     "_shift"
+    # ]
 
     def __init__(
             self,
@@ -30,10 +30,6 @@ class Properties(Period, Method, Price, Shift):
         Method.__init__(self, method)
         Price.__init__(self, price)
         Shift.__init__(self, shift)
-        # self._period = period
-        # self._method = method
-        # self._price = price
-        # self._shift = shift
 
 
 class MA(Indicator, Properties):
@@ -78,7 +74,7 @@ class MA(Indicator, Properties):
 
     def calculate(self, *, bar: int = 0) -> Result:
         print(self.dataset, bar)
-        if bar is not None:
+        if bar is not None and isinstance(self.dataset, slice):
             return moving_average(self.dataset[bar:bar + self.period], self.period)
 
         return None
@@ -96,17 +92,17 @@ class MA(Indicator, Properties):
 
 
 if __name__ == "__main__":
-    ma1 = MA("EURUSD", MA.TIMEFRAME_H1, period=3, method=0)
-    print(ma1)
-    print(ma1(period=3, method=1, price=3, shift=0, bar=1))
-    print(ma1[2])
+    ma = MA("EURUSD", MA.TIMEFRAME_H1, period=3, method=0)
+    print(ma)
+    print(ma(period=3, method=1, price=3, shift=0, bar=1))
+    print(ma[2])
     # ma1[2] = 9.61
     # print(ma1[2])
     # print(ma1.__dict__)
     # ma1.name = "123"
     # print(ma1.name)
     # ma1.symbol = "CHFUSD"
-    print(ma1.slots)
+    print(ma.slots)
 
     # pr = Properties()
     # print(pr, pr["period"])

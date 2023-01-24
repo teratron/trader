@@ -2,11 +2,11 @@ class Symbol:
     """Symbol.
     """
 
-    slots = "_symbol"
-
     EURUSD = "EURUSD"
     GBPUSD = "GBPUSD"
     CHFUSD = "CHFUSD"
+
+    slots: str = "_symbol"
 
     def __init__(self, symbol: str) -> None:
         self._symbol = symbol

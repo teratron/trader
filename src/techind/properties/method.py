@@ -1,11 +1,20 @@
-from typing import Union
-
-
 class Method:
     """Method.
     """
 
-    slots: Union[list[str], str] = "_method"
+    SMA = 0
+    """Простое усреднение"""
+
+    EMA = 1
+    """Экспоненциальное усреднение"""
+
+    SMMA = 2
+    """Сглаженное усреднение"""
+
+    LWMA = 3
+    """Линейно-взвешенное усреднение"""
+
+    slots: str = "_method"
 
     def __init__(self, method: int) -> None:
         self._method = method
@@ -16,7 +25,7 @@ class Method:
 
     @method.setter
     def method(self, value: int) -> None:
-        if 0 < value < 1000:
+        if Method.SMA <= value <= Method.LWMA:
             self._method = value
         else:
             raise ValueError("")

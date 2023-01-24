@@ -1,11 +1,8 @@
-from typing import Union
-
-
 class Shift:
     """Shift.
     """
 
-    slots: Union[list[str], str] = "_shift"
+    slots: str = "_shift"
 
     def __init__(self, shift: int) -> None:
         self._shift = shift

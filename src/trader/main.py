@@ -12,16 +12,16 @@ if __name__ == "__main__":
         print(mt5.version())
         print(mt5.terminal_info())
 
-        euraud_ticks = mt5.copy_ticks_from("EURAUD", datetime(2020, 1, 28, 13), 1000, mt5.COPY_TICKS_ALL)
-        audusd_ticks = mt5.copy_ticks_range("AUDUSD", datetime(2020, 1, 27, 13), datetime(2020, 1, 28, 13),
+        euraud_ticks = mt5.copy_ticks_from("EURAUD", datetime(2020, 1, 29, 13), 1000, mt5.COPY_TICKS_ALL)
+        audusd_ticks = mt5.copy_ticks_range("AUDUSD", datetime(2020, 1, 26, 13), datetime(2020, 1, 27, 13),
                                             mt5.COPY_TICKS_ALL)
 
-        eurusd_rates = mt5.copy_rates_from("EURUSD", mt5.TIMEFRAME_M1, datetime(2022, 12, 28, 13), 1000)
+        eurusd_rates = mt5.copy_rates_from("EURUSD", mt5.TIMEFRAME_M1, datetime(2022, 11, 28, 13), 1000)
         eurgbp_rates = mt5.copy_rates_from_pos("EURGBP", mt5.TIMEFRAME_M1, 0, 1000)
         eurcad_rates = mt5.copy_rates_range("EURCAD", mt5.TIMEFRAME_M1, datetime(2020, 1, 27, 13),
                                             datetime(2020, 1, 28, 13))
 
-        print('euraud_ticks(', len(euraud_ticks), ')')
+        print(f'euraud_ticks( {len(euraud_ticks)} )')
         for val in euraud_ticks[:10]:
             print(val)
 

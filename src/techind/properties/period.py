@@ -1,16 +1,8 @@
-from typing import Union
-
-
 class Period:
     """Period.
     """
 
-    slots: Union[list[str], str] = "_period"
-
-    def __init_subclass__(cls, **kwargs) -> None:
-        Period.slots = [Period.slots]
-        Period.slots.extend(cls.slots)
-        print("__init_subclass__:Period", cls, cls.slots, Period.slots, kwargs)
+    slots: str = "_period"
 
     def __init__(self, period: int) -> None:
         self._period = period

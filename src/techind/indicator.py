@@ -1,21 +1,20 @@
 from abc import ABC, abstractmethod
-
 from typing import Any, Union, Optional, Sequence
 
 from techind.properties.symbol import Symbol
 from techind.properties.timeframe import Timeframe
 
-Result = Union[list[float], float, None]
+Result = Union[list[Optional[float]], float, None]
 
 
 class Indicator(ABC, Symbol, Timeframe):
     """Indicator.
     """
 
-    slots = [
-        Symbol.slots,
-        Timeframe.slots
-    ]
+    # slots: Union[list[str], str] = [
+    #     Symbol.slots,
+    #     Timeframe.slots
+    # ]
 
     name = "Indicator"
     type = "Indicator"
@@ -24,14 +23,15 @@ class Indicator(ABC, Symbol, Timeframe):
     def __init__(self, /, symbol: str, timeframe: int, **kwargs: Any) -> None:
         Symbol.__init__(self, symbol)
         Timeframe.__init__(self, timeframe)
-        self.dataset: Optional[list[Any]] = [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 7.0]
+        self.dataset: Union[list[Optional[float]], slice, None] = [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 7.0]
+        self.len_dataset: int = len(self.dataset)
 
     def __call__(self, *args: Any, **kwargs: Any) -> Any:
         print("__call__:Indicator", args)
         return 28.9
 
     def __getitem__(self, key: int) -> Result:
-        if 0 <= key < len(self.dataset):
+        if isinstance(self.dataset, list) and 0 <= key < len(self.dataset):
             return self.calculate(bar=key)
         else:
             raise IndexError("Неверный индекс")
@@ -40,17 +40,19 @@ class Indicator(ABC, Symbol, Timeframe):
         if not isinstance(key, int) or key < 0:
             raise TypeError("Индекс должен быть целым неотрицательным числом")
 
-        if key >= len(self.dataset):
-            off = key + 1 - len(self.dataset)
-            self.dataset.extend([None] * off)
+        if isinstance(self.dataset, list):
+            if key >= len(self.dataset):
+                off = key + 1 - len(self.dataset)
+                self.dataset.extend([None] * off)
 
-        self.dataset[key] = value
+            self.dataset[key] = value
 
     def __delitem__(self, key: int) -> None:
         if not isinstance(key, int):
             raise TypeError("Индекс должен быть целым числом")
 
-        del self.dataset[key]
+        if isinstance(self.dataset, list):
+            del self.dataset[key]
 
     @abstractmethod
     def calculate(self, *args: Any, **kwargs: Any) -> Result:

@@ -5,7 +5,6 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from pandas.plotting import register_matplotlib_converters
 
-
 if __name__ == "__main__":
     register_matplotlib_converters()
 
@@ -20,16 +19,18 @@ if __name__ == "__main__":
     # получим информацию о версии MetaTrader 5
     print(mt5.version())
 
-    # запросим 1000 тиков с EURAUD
-    euraud_ticks = mt5.copy_ticks_from("EURAUD", datetime(2020, 1, 28, 13), 1000, mt5.COPY_TICKS_ALL)
+    # запросим 1000 тиков с `EURAUD`
+    euraud_ticks = mt5.copy_ticks_from("EURAUD", datetime(2018, 1, 28, 13), 1000, mt5.COPY_TICKS_ALL)
 
     # запросим тики с AUDUSD в интервале 2019.04.01 13:00 - 2019.04.02 13:00
-    audusd_ticks = mt5.copy_ticks_range("AUDUSD", datetime(2020, 1, 27, 13), datetime(2020, 1, 28, 13), mt5.COPY_TICKS_ALL)
+    audusd_ticks = mt5.copy_ticks_range("AUDUSD", datetime(2019, 1, 27, 13), datetime(2020, 1, 28, 13),
+                                        mt5.COPY_TICKS_ALL)
 
     # получим бары с разных инструментов разными способами
     eurusd_rates = mt5.copy_rates_from("EURUSD", mt5.TIMEFRAME_M1, datetime(2022, 12, 28, 13), 1000)
     eurgbp_rates = mt5.copy_rates_from_pos("EURGBP", mt5.TIMEFRAME_M1, 0, 1000)
-    eurcad_rates = mt5.copy_rates_range("EURCAD", mt5.TIMEFRAME_M1, datetime(2020, 1, 27, 13), datetime(2020, 1, 28, 13))
+    eurcad_rates = mt5.copy_rates_range("EURCAD", mt5.TIMEFRAME_M1, datetime(2020, 1, 27, 13),
+                                        datetime(2020, 1, 28, 13))
 
     # завершим подключение к MetaTrader 5
     mt5.shutdown()
