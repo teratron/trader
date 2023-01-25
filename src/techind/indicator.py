@@ -2,15 +2,32 @@ from abc import ABC, abstractmethod
 
 from typing import Any, Union, Optional, Sequence
 
-from techind.properties.symbol import Symbol
-from techind.properties.timeframe import Timeframe
+DatasetType = Union[
+    list[
+        Union[
+            list[Any, ...],
+            tuple[Any, ...],
+            float,
+            None
+        ]
+    ],
+    # slice,
+    None
+]
 
 ResultType = Union[list[Optional[float]], float, None]
 BarType = Union[int, slice, None]
 DataType = Sequence[Union[float, int]]
 
 
-class Indicator(ABC, Symbol, Timeframe):
+class Data:
+    dataset: DatasetType
+
+    def __init__(self) -> None:
+        self.len_dataset: int = len(self.dataset)
+
+
+class Indicator(ABC):
     """Indicator.
     """
 
@@ -19,20 +36,25 @@ class Indicator(ABC, Symbol, Timeframe):
     #     Timeframe.slots
     # ]
 
-    name = "Indicator"
+    name = "indicator"
     type = "Indicator"
     description = __doc__
 
-    def __init__(self, /, symbol: str, timeframe: int, **kwargs: Any) -> None:
-        Symbol.__init__(self, symbol)
-        Timeframe.__init__(self, timeframe)
-        self.dataset: Union[list[Optional[float]], slice, None] = [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 7.0]
+    def __init__(self, /, dataset: DatasetType, **kwargs: Any) -> None:
+        self.dataset = dataset  # [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 7.0]
         self.len_dataset: int = len(self.dataset)
 
-    def __call__(self, *args: Any, **kwargs: Any) -> Any:
-        print("__call__:Indicator", args)
-        return 28.9
+    # Call
+    def __call__(self, *, bar: BarType = None, **kwargs: Any) -> ResultType:
+        if kwargs != {}:
+            self.properties(**kwargs)
 
+        if bar is not None:
+            return self.calculate(bar=bar)
+
+        return None
+
+    # Item
     def __getitem__(self, key: BarType) -> ResultType:
         if isinstance(self.dataset, list) and 0 <= key < len(self.dataset):
             return self.calculate(bar=key)
@@ -49,6 +71,17 @@ class Indicator(ABC, Symbol, Timeframe):
                 self.dataset.extend([None] * off)
 
             self.dataset[key] = value
+
+    def __delitem__(self, key: int) -> None:
+        if not isinstance(key, int):
+            raise TypeError("Индекс должен быть целым числом")
+
+        if isinstance(self.dataset, list):
+            del self.dataset[key]
+
+    @abstractmethod
+    def properties(self, **kwargs: Any) -> None:
+        ...
 
     @abstractmethod
     def calculate(self, *args: Any, **kwargs: Any) -> ResultType:

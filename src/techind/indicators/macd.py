@@ -1,3 +1,4 @@
+from techind.indicator import DatasetType
 from techind.indicators.ma import MA
 
 
@@ -17,7 +18,7 @@ class MACD(MA):
     );
     """
 
-    name = "Moving Average Convergence Divergence"
+    name = "macd"
     type = "MACD"
     description = __doc__
 
@@ -28,33 +29,26 @@ class MACD(MA):
 
     def __init__(
             self,
-            symbol: str,
-            timeframe: int = 1,
+            /,
+            dataset: DatasetType,
             *,
             period: int = 14,
             method: int = 0,
-            price: int = 0,
-            shift: int = 0,
-            bar: int = 0
+            price: int = 0
     ) -> None:
         print("__init__:MACD")
 
-        super().__init__()
-        self.symbol = symbol
-        self.timeframe = timeframe
+        super().__init__(dataset)
         self.period = period
         self.method = method
         self.price = price
-        self.shift = shift
-        self.bar = bar
 
-
-if __name__ == "__main__":
-    # ma = MACD([1.32, 2.7, 3.92])
-    ma = MACD("EURUSD")
-    # print(ma(43))
-    # print(ma[2])
-    # ma[2] = 9.61
-    # print(ma[2])
-
-    print("macd")
+# if __name__ == "__main__":
+#     # ma = MACD([1.32, 2.7, 3.92])
+#     ma = MACD("EURUSD")
+#     # print(ma(43))
+#     # print(ma[2])
+#     # ma[2] = 9.61
+#     # print(ma[2])
+#
+#     print("macd")

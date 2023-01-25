@@ -3,21 +3,21 @@ class Method:
     """
 
     SMA = 0
-    """Простое усреднение"""
+    """Простое усреднение."""
 
     EMA = 1
-    """Экспоненциальное усреднение"""
+    """Экспоненциальное усреднение."""
 
     SMMA = 2
-    """Сглаженное усреднение"""
+    """Сглаженное усреднение."""
 
     LWMA = 3
-    """Линейно-взвешенное усреднение"""
+    """Линейно-взвешенное усреднение."""
 
     slots: str = "_method"
 
     def __init__(self, method: int) -> None:
-        self._method = method
+        self._method = self.check(method)
 
     @property
     def method(self) -> int:
@@ -25,7 +25,10 @@ class Method:
 
     @method.setter
     def method(self, value: int) -> None:
-        if Method.SMA <= value <= Method.LWMA:
-            self._method = value
+        self._method = self.check(value)
+
+    def check(self, value: int) -> int:
+        if self.SMA <= value <= self.LWMA:
+            return value
         else:
-            raise ValueError("")
+            raise ValueError("")  # TODO: add text exception

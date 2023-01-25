@@ -3,30 +3,30 @@ class Price:
     """
 
     CLOSE = 0
-    """Цена закрытия"""
+    """Цена закрытия."""
 
     OPEN = 1
-    """Цена открытия"""
+    """Цена открытия."""
 
     HIGH = 2
-    """Максимальная за период цена"""
+    """Максимальная за период цена."""
 
     LOW = 3
-    """Минимальная за период цена"""
+    """Минимальная за период цена."""
 
     MEDIAN = 4
-    """Медианная цена, (high+low)/2"""
+    """Медианная цена, `(high+low)/2`."""
 
     TYPICAL = 5
-    """Типичная цена, (high+low+close)/3"""
+    """Типичная цена, `(high+low+close)/3`."""
 
     WEIGHTED = 6
-    """Взвешенная цена закрытия, (high+low+close+close)/4"""
+    """Взвешенная цена закрытия, `(high+low+close+close)/4`."""
 
     slots: str = "_price"
 
     def __init__(self, price: int) -> None:
-        self._price = price
+        self._price = self.check(price)
 
     @property
     def price(self) -> int:
@@ -34,7 +34,10 @@ class Price:
 
     @price.setter
     def price(self, value: int) -> None:
-        if Price.CLOSE <= value <= Price.WEIGHTED:
-            self._price = value
+        self._price = self.check(value)
+
+    def check(self, value: int) -> int:
+        if self.CLOSE <= value <= self.WEIGHTED:
+            return value
         else:
-            raise ValueError("")
+            raise ValueError("")  # TODO: add text exception
