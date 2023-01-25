@@ -26,7 +26,8 @@ class Price:
     slots: str = "_price"
 
     def __init__(self, price: int) -> None:
-        self._price = self.check(price)
+        print("price:__init__")
+        self._price = Price.check(price)
 
     @property
     def price(self) -> int:
@@ -36,8 +37,10 @@ class Price:
     def price(self, value: int) -> None:
         self._price = self.check(value)
 
-    def check(self, value: int) -> int:
-        if self.CLOSE <= value <= self.WEIGHTED:
+    @classmethod
+    def check(cls, value: int) -> int:
+        print("price:check")
+        if cls.CLOSE <= value <= cls.WEIGHTED:
             return value
         else:
             raise ValueError("")  # TODO: add text exception

@@ -1,12 +1,13 @@
 from abc import ABC, abstractmethod
-
 from typing import Any, Union, Optional, Sequence
+
 
 DatasetType = Union[
     list[
         Union[
-            list[Any, ...],
-            tuple[Any, ...],
+            Any,
+            list[Any],
+            tuple[Any],
             float,
             None
         ]
@@ -15,16 +16,22 @@ DatasetType = Union[
     None
 ]
 
-ResultType = Union[list[Optional[float]], float, None]
+BufferType = Optional[list[Optional[float]]]
+ResultType = Union[BufferType, float]
 BarType = Union[int, slice, None]
 DataType = Sequence[Union[float, int]]
 
 
 class Data:
-    dataset: DatasetType
+    """Data.
+    """
+
+    dataset: DatasetType = None
+    buffer: Optional[list[Optional[float]]] = None
 
     def __init__(self) -> None:
-        self.len_dataset: int = len(self.dataset)
+        if self.dataset is not None:
+            self.len_dataset: int = len(self.dataset)
 
 
 class Indicator(ABC):
@@ -41,8 +48,10 @@ class Indicator(ABC):
     description = __doc__
 
     def __init__(self, /, dataset: DatasetType, **kwargs: Any) -> None:
-        self.dataset = dataset  # [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 7.0]
-        self.len_dataset: int = len(self.dataset)
+        self.dataset = dataset
+
+        if self.dataset is not None:
+            self.len_dataset: int = len(self.dataset)
 
     # Call
     def __call__(self, *, bar: BarType = None, **kwargs: Any) -> ResultType:

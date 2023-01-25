@@ -3,9 +3,12 @@ class Period:
     """
 
     slots: str = "_period"
+    min_value: int = 1
+    max_value: int = 10000
 
     def __init__(self, period: int) -> None:
-        self._period = self.check(period)
+        print("period:__init__")
+        self._period = Period.check(period)
 
     @property
     def period(self) -> int:
@@ -15,9 +18,10 @@ class Period:
     def period(self, value: int) -> None:
         self._period = self.check(value)
 
-    @staticmethod
-    def check(value: int) -> int:
-        if 0 < value <= 10000:
+    @classmethod
+    def check(cls, value: int) -> int:
+        print("period:check")
+        if cls.min_value <= value <= cls.max_value:
             return value
         else:
             raise ValueError("")  # TODO: add text exception

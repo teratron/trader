@@ -16,13 +16,7 @@ class Properties(Period, Method, Price):
     #     "_price"
     # ]
 
-    def __init__(
-            self,
-            *,
-            period: int = 7,
-            method: int = Method.SMA,
-            price: int = Price.CLOSE
-    ) -> None:
+    def __init__(self, *, period: int = 7, method: int = Method.SMA, price: int = Price.CLOSE) -> None:
         Period.__init__(self, period)
         Method.__init__(self, method)
         Price.__init__(self, price)
@@ -72,7 +66,7 @@ class MA(Indicator, Properties):
         match bar:
             case None:
                 return None
-            case int():
+            case int() if not isinstance(self.dataset, float | None) and 0 <= bar < len(self.dataset):
                 data = self.dataset[bar:bar + self.period]
             case slice():
                 data = self.dataset[bar.start:bar.stop + self.period - 1]
@@ -82,7 +76,7 @@ class MA(Indicator, Properties):
 
 
 if __name__ == "__main__":
-    data_series = [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 7.0]
+    data_series: DatasetType = [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 7.0]
 
     ma = MA(data_series, period=4, method=3)
     # ma = MA(data_series)

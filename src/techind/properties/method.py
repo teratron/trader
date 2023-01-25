@@ -17,7 +17,8 @@ class Method:
     slots: str = "_method"
 
     def __init__(self, method: int) -> None:
-        self._method = self.check(method)
+        print("method:__init__")
+        self._method = Method.check(method)
 
     @property
     def method(self) -> int:
@@ -27,8 +28,10 @@ class Method:
     def method(self, value: int) -> None:
         self._method = self.check(value)
 
-    def check(self, value: int) -> int:
-        if self.SMA <= value <= self.LWMA:
+    @classmethod
+    def check(cls, value: int) -> int:
+        print("method:check")
+        if cls.SMA <= value <= cls.LWMA:
             return value
         else:
             raise ValueError("")  # TODO: add text exception
