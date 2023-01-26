@@ -1,5 +1,15 @@
 class Price:
     """Price.
+
+    Ценовые константы:
+
+    * CLOSE -- Цена закрытия (0).
+    * OPEN -- Цена открытия (1).
+    * HIGH -- Максимальная за период цена (2).
+    * LOW -- Минимальная за период цена (3).
+    * MEDIAN -- Медианная цена, `(high+low)/2` (4).
+    * TYPICAL -- Типичная цена, `(high+low+close)/3` (5).
+    * WEIGHTED -- Взвешенная цена закрытия, `(high+low+close+close)/4` (6).
     """
 
     CLOSE = 0
@@ -26,7 +36,6 @@ class Price:
     slots: str = "_price"
 
     def __init__(self, price: int) -> None:
-        print("price:__init__")
         self._price = Price.check(price)
 
     @property
@@ -39,7 +48,6 @@ class Price:
 
     @classmethod
     def check(cls, value: int) -> int:
-        print("price:check")
         if cls.CLOSE <= value <= cls.WEIGHTED:
             return value
         else:

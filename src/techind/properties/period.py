@@ -7,7 +7,6 @@ class Period:
     max_value: int = 10000
 
     def __init__(self, period: int) -> None:
-        print("period:__init__")
         self._period = Period.check(period)
 
     @property
@@ -20,7 +19,6 @@ class Period:
 
     @classmethod
     def check(cls, value: int) -> int:
-        print("period:check")
         if cls.min_value <= value <= cls.max_value:
             return value
         else:

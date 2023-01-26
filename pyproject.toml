@@ -30,7 +30,9 @@ classifiers = [
 ]
 packages = [
     { include = "trader", from = "src" },
-    { include = "techind", from = "src" }
+    { include = "techind", from = "src" },
+    { include = "trader/py.typed" },
+    { include = "techind/py.typed" }
 ]
 include = [
     { path = "tests", format = "sdist" }

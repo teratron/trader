@@ -1,5 +1,10 @@
 class Method:
     """Method.
+
+    * SMA -- Простое усреднение (0).
+    * EMA -- Экспоненциальное усреднение (1).
+    * SMMA -- Сглаженное усреднение (2).
+    * LWMA -- Линейно-взвешенное усреднение (3).
     """
 
     SMA = 0
@@ -17,7 +22,6 @@ class Method:
     slots: str = "_method"
 
     def __init__(self, method: int) -> None:
-        print("method:__init__")
         self._method = Method.check(method)
 
     @property
@@ -30,7 +34,6 @@ class Method:
 
     @classmethod
     def check(cls, value: int) -> int:
-        print("method:check")
         if cls.SMA <= value <= cls.LWMA:
             return value
         else:

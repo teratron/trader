@@ -26,10 +26,12 @@ class MA(Indicator, Properties):
     """Moving Average.
 
     Class `MA`:
+
     * MA(dataset=[])
     * MA(dataset=[], period=24, method=0, price=0)
 
     Instance `ma = MA()`:
+
     * ma
     * ma[42]
     * ma[:42]
