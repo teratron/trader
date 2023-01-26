@@ -14,7 +14,13 @@ class Properties(Period, Method, Price):
     #     "_price"
     # ]
 
-    def __init__(self, *, period: int = 7, method: int = Method.SMA, price: int = Price.CLOSE) -> None:
+    def __init__(
+            self,
+            *,
+            period: int = 7,
+            method: int = Method.SMA,
+            price: int = Price.CLOSE
+    ) -> None:
         Period.__init__(self, period)
         Method.__init__(self, method)
         Price.__init__(self, price)
