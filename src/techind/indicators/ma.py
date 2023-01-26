@@ -70,6 +70,8 @@ class MA(Indicator, Properties):
                 data = self.dataset[bar:bar + self.period]
             case slice():
                 data = self.dataset[bar.start:bar.stop + self.period - 1]
+            case _:
+                raise IndexError("Неверный индекс")
 
         print("calculate", self.dataset, bar, data)
         return moving_average(data, self.period)

@@ -3,16 +3,29 @@ from typing import Any, Union, Optional, Sequence
 
 
 DatasetType = Union[
-    list[
+    Sequence[
         Union[
-            Any,
-            list[Any],
-            tuple[Any],
-            float,
-            None
+            list[Any],  # [[0.1, 2, 0.3, None], [0.1, 2, 0.3, None], ...]
+            tuple[Any],  # [(0.1, 2, 0.3, None), (0.1, 2, 0.3, None), ...]
+            Optional[float]  # [0.1, 0.2, 0.3, None]
         ]
     ],
+    # list[
+    #     Union[
+    #         Any,
+    #         list[Any],
+    #         tuple[Any],
+    #         float,
+    #         None
+    #     ]
+    # ],
     # slice,
+    None
+]
+
+IndicatorType = Union[
+    list[Optional[float]],  # [0.1, 0.2, 0.3, None]
+    Sequence[list[Optional[float]]],  # [[0.1, 0.2, 0.3, None], [0.1, 0.2, 0.3, None], ...]
     None
 ]
 
@@ -65,6 +78,16 @@ class Indicator(ABC):
 
     # Item
     def __getitem__(self, key: BarType) -> ResultType:
+        match key:
+            case None:
+                return None
+            case int() if not isinstance(self.dataset, float | None) and 0 <= key < len(self.dataset):
+                data = self.dataset[key:key + self.period]
+            case slice():
+                data = self.dataset[key.start:key.stop + self.period - 1]
+            case _:
+                raise IndexError("Неверный индекс")
+
         if isinstance(self.dataset, list) and 0 <= key < len(self.dataset):
             return self.calculate(bar=key)
         else:
