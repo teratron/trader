@@ -63,6 +63,15 @@ class MA(Indicator, Properties):
         super().__init__(dataset)
         Properties.__init__(self, **kwargs)
 
+        pr = []
+        for i in range(self.len_dataset):
+            pr.append(round(self.get_price(*self.dataset[i][1:5]), 6))
+
+        print(pr)
+        maa = moving_average(pr, self.period)  # : list[float | None]
+        maa.extend([None] * 2)
+        print(maa)
+
     def calculate(self, *, bar: BarType = None) -> ResultType:
         if self.buffer is None:
             pass
@@ -73,6 +82,7 @@ class MA(Indicator, Properties):
                 return None
             case int():
                 data = self.dataset[bar:bar + self.period]
+
             case slice():
                 data = self.dataset[bar.start:bar.stop + self.period - 1]
             case _:
@@ -85,7 +95,7 @@ class MA(Indicator, Properties):
 if __name__ == "__main__":
     from techind.data import eurusd_rates
 
-    ma = MA(eurusd_rates, period=3, method=0, price=0)
+    ma = MA(eurusd_rates, period=3, method=0, price=Price.WEIGHTED)
     # ta = MA(test_rates, period=3, method=0, price=0)
 
     # print(ma.__dict__)

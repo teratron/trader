@@ -52,3 +52,40 @@ class Price:
             return value
         else:
             raise ValueError("")  # TODO: add text exception
+
+    # def get_price(self, ohlc: tuple[float, float, float, float]) -> float:
+    # def get_price(self, *ohlc: float) -> float:
+    def get_price(self, /, price_open: float, price_high: float, price_low: float, price_close: float) -> float:
+        # print(self._price, price_open, price_high, price_low, price_close)
+        """
+        ohlc:
+        0     1     2    3
+        open, high, low, close
+        """
+        match self._price:
+            case Price.CLOSE:
+                return price_close
+            case Price.OPEN:
+                return price_open
+            case Price.HIGH:
+                return price_high
+            case Price.LOW:
+                return price_low
+            case Price.MEDIAN:
+                return Price.get_median(price_high, price_low)
+            case Price.TYPICAL:
+                return Price.get_typical(price_high, price_low, price_close)
+            case Price.WEIGHTED:
+                return Price.get_weighted(price_high, price_low, price_close)
+
+    @staticmethod
+    def get_median(price_high: float, price_low: float) -> float:
+        return (price_high + price_low) / 2
+
+    @staticmethod
+    def get_typical(price_high: float, price_low: float, price_close: float) -> float:
+        return (price_high + price_low + price_close) / 3
+
+    @staticmethod
+    def get_weighted(price_high: float, price_low: float, price_close: float) -> float:
+        return (price_high + price_low + price_close * 2) / 4

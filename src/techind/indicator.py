@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+
 from typing import Any, Union, Sequence
 
 from techind.properties.method import Method
@@ -24,6 +25,8 @@ BufferType = Union[
     #     ]
     # ],
     list[list[float]],
+    list[list[int | float]],
+    list[tuple[int, float]],
     list[float],
     None
 ]
@@ -39,7 +42,8 @@ ResultType = Union[
     # ],
     # tuple[Optional[float]],
     list[tuple[float, ...]],
-    list[float],
+    # list[float | None],
+    list[Union[float | None]],
     tuple[float, ...],
     float,
     None
@@ -102,9 +106,14 @@ class Indicator(ABC):
 
         print(self.len_dataset)
         print(self.dataset)
-        # match self.dataset:
-        #     case Type(self.dataset) as a:
-        #         print("++++++")
+
+        match self.dataset:
+            case list():
+                print("++++++", len(self.dataset[0][1:5]))
+
+                # pr = self.get(*self.dataset[0][1:5])
+                # print(pr)
+                #print(price_open, price_high, price_low, price_close)
 
     def __call__(self, *, bar: BarType = None, **kwargs: Any) -> ResultType:
         if kwargs != {} and Indicator.properties is not None:
@@ -172,16 +181,16 @@ def moving_average(data: DataType, period: int, method: int = Method.SMA) -> Res
         data = list(data)
 
     match method:
-        case Method.SMA:  # SMA(i) = SUM(CLOSE(i), N) / N
+        case Method.SMA:  # SMA = SUM(CLOSE(i), N) / N
             return [
-                sum(data[i:period + i]) / float(period)
+                round(sum(data[i:period + i]) / float(period), 6)
                 for i in range(length - period + 1)
             ]
-        case Method.EMA:  # EMA(i) = (CLOSE(i) * P) + (EMA(i - 1) * (100 - P))
+        case Method.EMA:  # EMA = CLOSE(i) * P + EMA(i - 1) * (100 - P)
             pass
-        case Method.SMMA:  # SMMA(0) = SUM(CLOSE(i), N) / N; SMMA(i) = (SUM(CLOSE(i), N) - SMMA(i - 1) + CLOSE(i)) / N
+        case Method.SMMA:  # SMMA(0) = SUM(CLOSE(i), N) / N; SMMA = (SUM(CLOSE(i), N) - SMMA(i - 1) + CLOSE(i)) / N
             pass
-        case Method.LWMA:  # LWMA(i) = SUM(CLOSE(i) * i, N) / SUM(i, N)
+        case Method.LWMA:  # LWMA = SUM(CLOSE(i) * i, N) / SUM(i, N)
             pass
 
     return None
