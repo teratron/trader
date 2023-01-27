@@ -1,12 +1,10 @@
 from abc import ABC, abstractmethod
-
 from typing import Any, Union, Optional, Sequence
+
 
 DatasetType = Optional[
     list[
         Union[
-            # list[Union[float, int, None]],
-            # tuple[Union[float, int, None]],
             Sequence[Union[float, int, None]],
             Optional[float]
         ]
@@ -72,32 +70,26 @@ class Indicator(ABC):
     name = "indicator"
     type = "Indicator"
     description = __doc__
-    props = None
+    properties = None
+    dataset = None
+    buffer = None
 
-    def __init_subclass__(cls, **kwargs):
-        print("__init_subclass__", cls.__bases__[1].__name__)
-        print("__init_subclass__", bool(filter(lambda x: x.__name__ == "Properties2", cls.__bases__)))
-        Indicator.props = list(filter(lambda x: x.__name__ == "Properties", cls.__bases__))[0]
+    def __init_subclass__(cls, **kwargs: Any):
+        props = list(filter(lambda x: x.__name__ == "Properties", cls.__bases__))
+        if props:
+            Indicator.properties = props[0]
 
     def __init__(self, /, dataset: DatasetType, **kwargs: Any) -> None:
-        # print("__init_subclass__", Indicator.props)
-        # Data.__init__(self, dataset)
         self.dataset = dataset
-        self.buffer: BufferType = None
+        # self.buffer: BufferType = None
         self.len_dataset: int = 0
 
         if self.dataset is not None:
             self.len_dataset = len(self.dataset)
 
-        # print("__init__", self.__class__)
-        # self.child = __class__
-        # self.instance = self.__class__.instance
-        # self.props = next(filter(lambda x: x.__name__ == "Properties", self.__class__.__bases__))
-        # print(self.props)
-
     def __call__(self, *, bar: BarType = None, **kwargs: Any) -> ResultType:
-        if kwargs != {}:
-            self.properties(**kwargs)
+        if kwargs != {} and Indicator.properties is not None:
+            Indicator.__dict__["properties"].__init__(self, **kwargs)
 
         if bar is not None:
             return self.__getitem__(bar)
@@ -126,14 +118,15 @@ class Indicator(ABC):
         if key < 0:
             raise IndexError("Индекс должен быть неотрицательным числом")
 
-        if self.buffer is list[Optional[float]]:
-            if key >= self.len_dataset:
-                off = key + 1 - self.len_dataset
-                self.buffer.extend([None] * off)
+        match self.buffer:
+            case list():
+                if key >= self.len_dataset:
+                    off = key + 1 - self.len_dataset
+                    self.buffer.extend([None] * off)
 
-            self.buffer[key] = value
-        else:
-            raise TypeError("Буфер индикатора не соответствует необходимому типу данных")
+                self.buffer[key] = value
+            case _:
+                raise TypeError("Буфер индикатора не соответствует необходимому типу данных")
 
     def __delitem__(self, key: int) -> None:
         if not isinstance(key, int):
@@ -141,14 +134,6 @@ class Indicator(ABC):
 
         if isinstance(self.dataset, list):
             del self.dataset[key]
-
-    def properties(self, **kwargs: Any) -> None:
-        # self.props.__init__(self.instance, **kwargs)
-        Indicator.props.__init__(self, **kwargs)
-
-    # @abstractmethod
-    # def properties(self, **kwargs: Any) -> None:
-    #     ...
 
     @abstractmethod
     def calculate(self, *args: Any, **kwargs: Any) -> ResultType:

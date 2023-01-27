@@ -60,14 +60,8 @@ class MA(Indicator, Properties):
     description = __doc__
 
     def __init__(self, /, dataset: DatasetType, **kwargs: int) -> None:
-        # self.instance = self
         super().__init__(dataset)
         Properties.__init__(self, **kwargs)
-        # self.properties(**kwargs)
-        # self.buffer: Optional[list[Optional[float]]] = None
-
-    # def properties(self, **kwargs: int) -> None:
-    #     Properties.__init__(self, **kwargs)
 
     def calculate(self, *, bar: BarType = None) -> ResultType:
         if self.buffer is None:
@@ -93,7 +87,6 @@ if __name__ == "__main__":
     data_series: DatasetType = [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 7.0]
 
     ma = MA(data_series, period=4, method=3)
-    # ma = MA(data_series)
     print(ma)
     print(ma.__dict__)
 
@@ -110,23 +103,6 @@ if __name__ == "__main__":
     print(ma[:2])
     print(ma.__dict__)
 
-    # ma1[2] = 9.61
-    # print(ma1[2])
+    # ma[2] = 9.61
+    # print(ma[2])
     # ma.period = 123
-    # print(ma.__dict__)
-    # print(ma1.name)
-    # ma1.symbol = "CHFUSD"
-    # print(ma.slots)
-
-    # pr = Properties()
-    # print(pr, pr["period"])
-
-    # ma2 = MA("EURUSD", Indicator.TIMEFRAME_H1, period=3, method=0)
-    # ma3 = MA("EURUSD", Indicator.TIMEFRAME_H1, period=3, method=0)
-    # print(ma2.name, ma3.name, MA.name)
-    #
-    # ma2.name = "123"
-    # print(ma2.name, ma3.name, MA.name)
-    #
-    # MA.name = "987"
-    # print(ma2.name, ma3.name, MA.name)
