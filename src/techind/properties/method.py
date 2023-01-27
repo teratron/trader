@@ -1,10 +1,10 @@
 class Method:
     """Method.
 
-    * SMA -- Простое усреднение (0).
-    * EMA -- Экспоненциальное усреднение (1).
-    * SMMA -- Сглаженное усреднение (2).
-    * LWMA -- Линейно-взвешенное усреднение (3).
+    * SMA -- Простое усреднение / Simple Moving Average (0).
+    * EMA -- Экспоненциальное усреднение / Exponential Moving Average (1).
+    * SMMA -- Сглаженное усреднение / Smoothed Moving Average (2).
+    * LWMA -- Линейно-взвешенное усреднение / Linear Weighted Moving Average (3).
     """
 
     SMA = 0

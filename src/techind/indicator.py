@@ -1,33 +1,46 @@
 from abc import ABC, abstractmethod
-from typing import Any, Union, Optional, Sequence
+from typing import Any, Union, Sequence
 
+from techind.properties.method import Method
 
-DatasetType = Optional[
-    list[
-        Union[
-            Sequence[Union[float, int, None]],
-            Optional[float]
-        ]
-    ]
+DatasetType = Union[
+    # list[
+    #     Union[
+    #         tuple[Optional[Any]],
+    #         Optional[float]
+    #     ]
+    # ],
+    list[tuple[int, float, float, float, float, int, int, int]],  # OHLC Data
+    list[tuple[int, float, float, float, int, int, int, float]],  # Tick Data
+    list[float],
+    None
 ]
 
-BufferType = Optional[
-    list[
-        Union[
-            list[Optional[float]],
-            Optional[float]
-        ]
-    ]
+BufferType = Union[
+    # list[
+    #     Union[
+    #         list[Optional[float]],
+    #         Optional[float]
+    #     ]
+    # ],
+    list[list[float]],
+    list[float],
+    None
 ]
+
+IndicatorType = BufferType
 
 ResultType = Union[
-    list[
-        Union[
-            tuple[Optional[float]],
-            Optional[float]
-        ]
-    ],
-    tuple[Optional[float]],
+    # list[
+    #     Union[
+    #         tuple[Optional[float]],
+    #         Optional[float]
+    #     ]
+    # ],
+    # tuple[Optional[float]],
+    list[tuple[float, ...]],
+    list[float],
+    tuple[float, ...],
     float,
     None
 ]
@@ -87,6 +100,12 @@ class Indicator(ABC):
         if self.dataset is not None:
             self.len_dataset = len(self.dataset)
 
+        print(self.len_dataset)
+        print(self.dataset)
+        # match self.dataset:
+        #     case Type(self.dataset) as a:
+        #         print("++++++")
+
     def __call__(self, *, bar: BarType = None, **kwargs: Any) -> ResultType:
         if kwargs != {} and Indicator.properties is not None:
             Indicator.__dict__["properties"].__init__(self, **kwargs)
@@ -140,7 +159,7 @@ class Indicator(ABC):
         ...
 
 
-def moving_average(data: DataType, period: int) -> ResultType:
+def moving_average(data: DataType, period: int, method: int = Method.SMA) -> ResultType:
     """Скользящая средняя."""
     length = len(data)
     if period > length:
@@ -152,7 +171,17 @@ def moving_average(data: DataType, period: int) -> ResultType:
     if not isinstance(data, list):
         data = list(data)
 
-    return [
-        sum(data[i:period + i]) / float(period)
-        for i in range(length - period + 1)
-    ]
+    match method:
+        case Method.SMA:  # SMA(i) = SUM(CLOSE(i), N) / N
+            return [
+                sum(data[i:period + i]) / float(period)
+                for i in range(length - period + 1)
+            ]
+        case Method.EMA:  # EMA(i) = (CLOSE(i) * P) + (EMA(i - 1) * (100 - P))
+            pass
+        case Method.SMMA:  # SMMA(0) = SUM(CLOSE(i), N) / N; SMMA(i) = (SUM(CLOSE(i), N) - SMMA(i - 1) + CLOSE(i)) / N
+            pass
+        case Method.LWMA:  # LWMA(i) = SUM(CLOSE(i) * i, N) / SUM(i, N)
+            pass
+
+    return None

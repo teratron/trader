@@ -83,26 +83,31 @@ class MA(Indicator, Properties):
 
 
 if __name__ == "__main__":
-    # from techind.data import eurusd_rates
-    data_series: DatasetType = [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 7.0]
+    from techind.data import eurusd_rates
 
-    ma = MA(data_series, period=4, method=3)
-    print(ma)
-    print(ma.__dict__)
+    ma = MA(eurusd_rates, period=3, method=0, price=0)
+    # ta = MA(test_rates, period=3, method=0, price=0)
 
-    print(ma(period=3, method=1, price=3, bar=3))
-    print(ma.__dict__)
-    print(ma(period=5, method=3, price=2))
-    print(ma.__dict__)
-    print(ma(bar=slice(1, 3)))
-    print(ma.__dict__)
-    print(ma())
-    print(ma.__dict__)
-    print(ma[2])
-    print(ma.__dict__)
-    print(ma[:2])
-    print(ma.__dict__)
+    # print(ma.__dict__)
 
+    # data_series: DatasetType = [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 7.0]
+    #
+    # ma = MA(data_series, period=4, method=3)
+    # print(ma)
+    # print(ma.__dict__)
+    #
+    # print(ma(period=3, method=1, price=3, bar=3))
+    # print(ma.__dict__)
+    # print(ma(period=5, method=3, price=2))
+    # print(ma.__dict__)
+    # print(ma(bar=slice(1, 3)))
+    # print(ma.__dict__)
+    # print(ma())
+    # print(ma.__dict__)
+    # print(ma[2])
+    # print(ma.__dict__)
+    # print(ma[:2])
+    # print(ma.__dict__)
     # ma[2] = 9.61
     # print(ma[2])
     # ma.period = 123

@@ -1,4 +1,6 @@
 """"
+    Tick Data:
+    ----------
     time        bid      ask     *    *  time           volume  *
     1547563093, 1.58846, 1.5887, 0.0, 0, 1547563093040, 134,    0.0
 """
@@ -32,8 +34,10 @@ audusd_ticks = [
 ]
 
 """"
-    time        high     low      open     close    volume  *  *
-    1672165020, 1.06481, 1.06506, 1.06477, 1.06489, 111,    2, 0
+    OHLC Data:
+    ----------
+    time        open     high     low      close    tick_volume  spread  real_volume
+    1672165020, 1.06481, 1.06506, 1.06477, 1.06489, 111,         2,      0
 """
 
 # EURUSD rates
