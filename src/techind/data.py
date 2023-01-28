@@ -1,7 +1,7 @@
 """"
     Tick Data:
     ----------
-    time        bid      ask     *    *  time           volume  *
+    time        ask      bid     *    *  time           volume  *
     1547563093, 1.58846, 1.5887, 0.0, 0, 1547563093040, 134,    0.0
 """
 

@@ -1,20 +1,43 @@
 from abc import ABC, abstractmethod
+from datetime import datetime
+from typing import Any, Union, Sequence, NamedTuple, Optional, Iterable
 
-from typing import Any, Union, Sequence
 
-from techind.properties.method import Method
+class BarType(NamedTuple):
+    time: int
+    # ohlc_price: OHLCType
+    open_price: float
+    high_price: float
+    low_price: float
+    close_price: float
+    tick_volume: int
+    spread: int
+    real_volume: int
 
-DatasetType = Union[
-    # list[
-    #     Union[
-    #         tuple[Optional[Any]],
-    #         Optional[float]
-    #     ]
-    # ],
-    list[tuple[int, float, float, float, float, int, int, int]],  # OHLC Data
-    list[tuple[int, float, float, float, int, int, int, float]],  # Tick Data
-    list[float],
-    None
+
+bbb = BarType(1672165020, 1.06481, 1.06506, 1.06477, 1.06489, 111, 2, 0)
+
+
+# aaa: OHLCType =OHLCType(high=1.06481, low=1.06506, close=1.06477)
+
+
+class TickType(NamedTuple):
+    time: datetime
+    ask: float
+    bid: float
+    a: float
+    tick_volume: int
+    spread: int
+    real_volume: int
+    b: float
+
+
+DataSeriesType = Optional[
+    Iterable[Union[BarType, TickType, float, None]]
+    # list[tuple[int, float, float, float, float, int, int, int]],  # OHLC Data
+    # list[tuple[int, float, float, float, int, int, int, float]],  # Tick Data
+    # list[float],
+    # None
 ]
 
 BufferType = Union[
@@ -49,7 +72,7 @@ ResultType = Union[
     None
 ]
 
-BarType = Union[int, slice, None]
+KeyType = Union[int, slice, None]
 DataType = Sequence[Union[float, int]]
 
 
@@ -59,7 +82,7 @@ DataType = Sequence[Union[float, int]]
 #
 #     buffer: BufferType = None
 #
-#     def __init__(self, dataset: DatasetType = None) -> None:
+#     def __init__(self, dataset: DataSeriesType = None) -> None:
 #         self.dataset = dataset
 #
 #         if self.dataset is not None:
@@ -96,7 +119,7 @@ class Indicator(ABC):
         if props:
             Indicator.properties = props[0]
 
-    def __init__(self, /, dataset: DatasetType, **kwargs: Any) -> None:
+    def __init__(self, /, dataset: DataSeriesType, **kwargs: Any) -> None:
         self.dataset = dataset
         # self.buffer: BufferType = None
         self.len_dataset: int = 0
@@ -115,7 +138,7 @@ class Indicator(ABC):
                 # print(pr)
                 #print(price_open, price_high, price_low, price_close)
 
-    def __call__(self, *, bar: BarType = None, **kwargs: Any) -> ResultType:
+    def __call__(self, *, bar: KeyType = None, **kwargs: Any) -> ResultType:
         if kwargs != {} and Indicator.properties is not None:
             Indicator.__dict__["properties"].__init__(self, **kwargs)
 
@@ -124,7 +147,7 @@ class Indicator(ABC):
 
         return None
 
-    def __getitem__(self, key: BarType) -> ResultType:
+    def __getitem__(self, key: KeyType) -> ResultType:
         valid: bool = False
         match key:
             case int():
@@ -166,31 +189,3 @@ class Indicator(ABC):
     @abstractmethod
     def calculate(self, *args: Any, **kwargs: Any) -> ResultType:
         ...
-
-
-def moving_average(data: DataType, period: int, method: int = Method.SMA) -> ResultType:
-    """Скользящая средняя."""
-    length = len(data)
-    if period > length:
-        print(f"Период `{period=}` превышает длину массива `{length=}`")
-        return None
-    elif period == length:
-        return sum(data) / float(period)
-
-    if not isinstance(data, list):
-        data = list(data)
-
-    match method:
-        case Method.SMA:  # SMA = SUM(CLOSE(i), N) / N
-            return [
-                round(sum(data[i:period + i]) / float(period), 6)
-                for i in range(length - period + 1)
-            ]
-        case Method.EMA:  # EMA = CLOSE(i) * P + EMA(i - 1) * (100 - P)
-            pass
-        case Method.SMMA:  # SMMA(0) = SUM(CLOSE(i), N) / N; SMMA = (SUM(CLOSE(i), N) - SMMA(i - 1) + CLOSE(i)) / N
-            pass
-        case Method.LWMA:  # LWMA = SUM(CLOSE(i) * i, N) / SUM(i, N)
-            pass
-
-    return None

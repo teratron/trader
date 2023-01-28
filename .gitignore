@@ -313,9 +313,9 @@ dmypy.json
 cython_debug/
 
 # poetry
-poetry.lock
+# poetry.lock
 
 # json
-*.json
-!examples/json/config/*.json
-!tests/pynn/testdata/*.json
+#*.json
+#!examples/json/config/*.json
+#!tests/pynn/testdata/*.json

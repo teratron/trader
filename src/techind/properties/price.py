@@ -1,5 +1,22 @@
-class Price:
-    """Price.
+from enum import IntEnum
+from typing import NamedTuple
+
+from techind.indicator import BarType
+
+PriceType = float
+
+aaa = BarType()[1:5]
+
+
+class OHLCType(NamedTuple):
+    open_price: float
+    high_price: float
+    low_price: float
+    close_price: float
+
+
+class PriceMode(IntEnum):
+    """PriceMode.
 
     Ценовые константы:
 
@@ -33,59 +50,71 @@ class Price:
     WEIGHTED = 6
     """Взвешенная цена закрытия, `(high+low+close+close)/4`."""
 
+
+class Price:
+    """Price.
+    """
+
     slots: str = "_price"
 
-    def __init__(self, price: int) -> None:
+    def __init__(self, price: PriceMode) -> None:
         self._price = Price.check(price)
 
     @property
-    def price(self) -> int:
+    def price(self) -> PriceMode:
         return self._price
 
     @price.setter
-    def price(self, value: int) -> None:
+    def price(self, value: PriceMode) -> None:
         self._price = self.check(value)
 
     @classmethod
-    def check(cls, value: int) -> int:
-        if cls.CLOSE <= value <= cls.WEIGHTED:
+    def check(cls, value: PriceMode) -> PriceMode:
+        if PriceMode.CLOSE <= value <= PriceMode.WEIGHTED:
             return value
         else:
             raise ValueError("")  # TODO: add text exception
 
-    # def get_price(self, ohlc: tuple[float, float, float, float]) -> float:
-    # def get_price(self, *ohlc: float) -> float:
-    def get_price(self, /, price_open: float, price_high: float, price_low: float, price_close: float) -> float:
-        # print(self._price, price_open, price_high, price_low, price_close)
-        """
-        ohlc:
-        0     1     2    3
-        open, high, low, close
-        """
-        match self._price:
-            case Price.CLOSE:
-                return price_close
-            case Price.OPEN:
-                return price_open
-            case Price.HIGH:
-                return price_high
-            case Price.LOW:
-                return price_low
-            case Price.MEDIAN:
-                return Price.get_median(price_high, price_low)
-            case Price.TYPICAL:
-                return Price.get_typical(price_high, price_low, price_close)
-            case Price.WEIGHTED:
-                return Price.get_weighted(price_high, price_low, price_close)
+    def get_price(
+            self,
+            bar: OHLCType
+    ) -> PriceType:
+        # return get_price(open_price, high_price, low_price, close_price, self._price)
+        return get_price(*bar, mode=self._price)
 
-    @staticmethod
-    def get_median(price_high: float, price_low: float) -> float:
-        return (price_high + price_low) / 2
 
-    @staticmethod
-    def get_typical(price_high: float, price_low: float, price_close: float) -> float:
-        return (price_high + price_low + price_close) / 3
+def get_price(
+        open_price: PriceType,
+        high_price: PriceType,
+        low_price: PriceType,
+        close_price: PriceType,
+        *,
+        mode: PriceMode
+) -> PriceType:
+    match mode:
+        case PriceMode.CLOSE:
+            return close_price
+        case PriceMode.OPEN:
+            return open_price
+        case PriceMode.HIGH:
+            return high_price
+        case PriceMode.LOW:
+            return low_price
+        case PriceMode.MEDIAN:
+            return get_median(high_price, low_price)
+        case PriceMode.TYPICAL:
+            return get_typical(high_price, low_price, close_price)
+        case PriceMode.WEIGHTED:
+            return get_weighted(high_price, low_price, close_price)
 
-    @staticmethod
-    def get_weighted(price_high: float, price_low: float, price_close: float) -> float:
-        return (price_high + price_low + price_close * 2) / 4
+
+def get_median(high_price: float, low_price: float) -> PriceType:
+    return (high_price + low_price) / 2
+
+
+def get_typical(high_price: float, low_price: float, close_price: float) -> PriceType:
+    return (high_price + low_price + close_price) / 3
+
+
+def get_weighted(high_price: float, low_price: float, close_price: float) -> PriceType:
+    return (high_price + low_price + close_price * 2) / 4

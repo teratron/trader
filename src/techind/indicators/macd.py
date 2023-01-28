@@ -1,4 +1,4 @@
-from techind.indicator import DatasetType
+from techind.indicator import DataSeriesType
 from techind.indicators.ma import MA
 
 
@@ -30,7 +30,7 @@ class MACD(MA):
     def __init__(
             self,
             /,
-            dataset: DatasetType,
+            dataset: DataSeriesType,
             *,
             period: int = 14,
             method: int = 0,
