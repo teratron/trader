@@ -1,4 +1,5 @@
 from enum import IntEnum
+
 from typing import NamedTuple
 
 PriceType = float
@@ -55,7 +56,7 @@ class Price:
 
     def __init__(self, price: PriceMode) -> None:
         # super().__init__(0.123)
-        self._price = Price._check(price)
+        self._price: PriceMode = _check(price)
 
     @property
     def price(self) -> PriceMode:
@@ -63,20 +64,9 @@ class Price:
 
     @price.setter
     def price(self, value: PriceMode) -> None:
-        self._price = self._check(value)
+        self._price = _check(value)
 
-    @staticmethod
-    def _check(value: PriceMode) -> PriceMode:
-        if PriceMode.CLOSE <= value <= PriceMode.WEIGHTED:
-            return value
-        else:
-            raise ValueError("")  # TODO: add text exception
-
-    def get_price(
-            self,
-            /,
-            bar: OHLCType
-    ) -> PriceType:
+    def get_price(self, /, *bar: OHLCType) -> PriceType:
         # return get_price(open_price, high_price, low_price, close_price, self._price)
         return get_price(*bar, mode=self._price)
 
@@ -117,3 +107,10 @@ def _get_typical(high_price: float, low_price: float, close_price: float) -> Pri
 
 def _get_weighted(high_price: float, low_price: float, close_price: float) -> PriceType:
     return (high_price + low_price + close_price * 2) / 4
+
+
+def _check(value: PriceMode) -> PriceMode:
+    if PriceMode.CLOSE <= value <= PriceMode.WEIGHTED:
+        return value
+    else:
+        raise ValueError("")  # TODO: add text exception

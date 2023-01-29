@@ -132,9 +132,9 @@ if __name__ == "__main__":
 
     if isinstance(eurusd_rates, list):
         ma = MA(eurusd_rates, period=3, method=0, price=PriceMode.WEIGHTED)
-    # ta = MA(test_rates, period=3, method=0, price=0)
+        # ta = MA(test_rates, period=3, method=0, price=0)
 
-    print(ma.__dict__)
+        print(ma.__dict__)
 
     # data_series: DataSeriesType = [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 7.0]
     #
