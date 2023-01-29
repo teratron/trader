@@ -1,6 +1,13 @@
 from abc import ABC, abstractmethod
 from datetime import datetime
-from typing import Any, Union, Sequence, NamedTuple, Optional, Iterable
+from typing import Any, Union, Sequence, NamedTuple, Callable
+
+
+class OHLCType(NamedTuple):
+    open_price: float
+    high_price: float
+    low_price: float
+    close_price: float
 
 
 class BarType(NamedTuple):
@@ -32,12 +39,16 @@ class TickType(NamedTuple):
     b: float
 
 
-DataSeriesType = Optional[
-    Iterable[Union[BarType, TickType, float, None]]
+DataSeriesType = Union[
+    Sequence[Union[BarType, TickType, float, None]],
+    list[Union[BarType, TickType, float, None]],
+    list[BarType],
+    list[tuple[int, float, float, float, float, int, int, int]],  # OHLC Data
     # list[tuple[int, float, float, float, float, int, int, int]],  # OHLC Data
     # list[tuple[int, float, float, float, int, int, int, float]],  # Tick Data
     # list[float],
-    # None
+
+    None
 ]
 
 BufferType = Union[
@@ -110,37 +121,40 @@ class Indicator(ABC):
     name = "indicator"
     type = "Indicator"
     description = __doc__
-    properties = None
-    dataset = None
+    # properties = None
+    dataset: DataSeriesType = None
     buffer = None
 
-    def __init_subclass__(cls, **kwargs: Any):
-        props = list(filter(lambda x: x.__name__ == "Properties", cls.__bases__))
-        if props:
-            Indicator.properties = props[0]
+    # def __init_subclass__(cls, **kwargs: Any):
+    #     props = list(filter(lambda x: x.__name__ == "Properties", cls.__bases__))
+    #     if props:
+    #         Indicator.properties = props[0]
 
     def __init__(self, /, dataset: DataSeriesType, **kwargs: Any) -> None:
         self.dataset = dataset
         # self.buffer: BufferType = None
         self.len_dataset: int = 0
 
-        if self.dataset is not None:
+        if isinstance(self.dataset, Sequence):
             self.len_dataset = len(self.dataset)
 
         print(self.len_dataset)
         print(self.dataset)
 
-        match self.dataset:
-            case list():
-                print("++++++", len(self.dataset[0][1:5]))
+        # match self.dataset:
+        #     case list():
+        #         print("++++++", len(self.dataset[0][1:5]))
 
-                # pr = self.get(*self.dataset[0][1:5])
-                # print(pr)
-                #print(price_open, price_high, price_low, price_close)
+        # pr = self.get(*self.dataset[0][1:5])
+        # print(pr)
+        # print(price_open, price_high, price_low, price_close)
 
     def __call__(self, *, bar: KeyType = None, **kwargs: Any) -> ResultType:
-        if kwargs != {} and Indicator.properties is not None:
-            Indicator.__dict__["properties"].__init__(self, **kwargs)
+        # if kwargs != {} and Indicator.properties is not None:
+        if kwargs != {}:
+            # Indicator.__dict__["properties"].__init__(self, **kwargs)
+            # print("************",kwargs)
+            self.__class__.properties(self, **kwargs)
 
         if bar is not None:
             return self.__getitem__(bar)
@@ -187,5 +201,15 @@ class Indicator(ABC):
             del self.dataset[key]
 
     @abstractmethod
+    def properties(self, **kwargs: Any) -> None:
+        ...
+
+    @abstractmethod
     def calculate(self, *args: Any, **kwargs: Any) -> ResultType:
         ...
+
+
+def _init(obj: type, class_name: str, call: Callable[[type], None]) -> None:
+    props = list(filter(lambda x: x.__name__ == class_name, obj.__bases__))
+    if props:
+        call(props[0])

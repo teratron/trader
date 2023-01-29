@@ -1,34 +1,10 @@
-from typing import Any
-
 from techind.indicator import Indicator, DataSeriesType, ResultType, KeyType, DataType, BarType
 from techind.properties.method import Method
 from techind.properties.period import Period
 from techind.properties.price import Price, PriceMode
 
 
-class Properties(Period, Method, Price):
-    """Properties.
-    """
-
-    # slots: Union[list[str], str] = [
-    #     Period.slots,
-    #     "_method",
-    #     "_price"
-    # ]
-
-    def __init__(
-            self,
-            *,
-            period: int = 7,
-            method: int = Method.SMA,
-            price: PriceMode = PriceMode.CLOSE
-    ) -> None:
-        Period.__init__(self, period)
-        Method.__init__(self, method)
-        Price.__init__(self, price)
-
-
-class MA(Indicator, Properties):
+class MA(Indicator, Period, Method, Price):
     """Moving Average.
 
     Class `MA`:
@@ -61,9 +37,20 @@ class MA(Indicator, Properties):
     type = "MA"
     description = __doc__
 
-    def __init__(self, /, dataset: DataSeriesType, **kwargs: Any) -> None:
+    def __init__(
+            self,
+            /,
+            dataset: DataSeriesType,
+            *,
+            period: int = 7,
+            method: int = Method.SMA,
+            price: PriceMode = PriceMode.CLOSE
+    ) -> None:
         super().__init__(dataset)
-        Properties.__init__(self, **kwargs)
+        # Period.__init__(self, period)
+        # Method.__init__(self, method)
+        # Price.__init__(self, price)
+        self.properties(period=period, method=method, price=price)
 
         pr = []
         # for i in range(self.len_dataset):
@@ -71,7 +58,7 @@ class MA(Indicator, Properties):
 
         if isinstance(self.dataset, list):
             for d in self.dataset:
-                print(d, type(d))
+                # print(d, type(d))
                 if d is BarType:
                     pr.append(round(self.get_price(*d[1:5]), 6))
 
@@ -79,6 +66,18 @@ class MA(Indicator, Properties):
         # maa = moving_average(pr, self.period)  # : list[float | None]
         # maa.extend([None] * 2)
         # print(maa)
+
+    def properties(
+            self,
+            *,
+            period: int = 7,
+            method: int = Method.SMA,
+            price: PriceMode = PriceMode.CLOSE
+    ) -> None:
+        print("************", period, method, price)
+        Period.__init__(self, period)
+        Method.__init__(self, method)
+        Price.__init__(self, price)
 
     def calculate(self, *, bar: KeyType = None) -> ResultType:
         if self.buffer is None:
@@ -131,10 +130,11 @@ def moving_average(data: DataType, period: int, method: int = Method.SMA) -> Res
 if __name__ == "__main__":
     from techind.data import eurusd_rates
 
-    ma = MA(eurusd_rates, period=3, method=0, price=PriceMode.WEIGHTED)
+    if isinstance(eurusd_rates, list):
+        ma = MA(eurusd_rates, period=3, method=0, price=PriceMode.WEIGHTED)
     # ta = MA(test_rates, period=3, method=0, price=0)
 
-    # print(ma.__dict__)
+    print(ma.__dict__)
 
     # data_series: DataSeriesType = [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 7.0]
     #

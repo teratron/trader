@@ -1,11 +1,7 @@
 from enum import IntEnum
 from typing import NamedTuple
 
-from techind.indicator import BarType
-
 PriceType = float
-
-aaa = BarType()[1:5]
 
 
 class OHLCType(NamedTuple):
@@ -58,7 +54,8 @@ class Price:
     slots: str = "_price"
 
     def __init__(self, price: PriceMode) -> None:
-        self._price = Price.check(price)
+        # super().__init__(0.123)
+        self._price = Price._check(price)
 
     @property
     def price(self) -> PriceMode:
@@ -66,10 +63,10 @@ class Price:
 
     @price.setter
     def price(self, value: PriceMode) -> None:
-        self._price = self.check(value)
+        self._price = self._check(value)
 
-    @classmethod
-    def check(cls, value: PriceMode) -> PriceMode:
+    @staticmethod
+    def _check(value: PriceMode) -> PriceMode:
         if PriceMode.CLOSE <= value <= PriceMode.WEIGHTED:
             return value
         else:
@@ -77,6 +74,7 @@ class Price:
 
     def get_price(
             self,
+            /,
             bar: OHLCType
     ) -> PriceType:
         # return get_price(open_price, high_price, low_price, close_price, self._price)
@@ -89,8 +87,9 @@ def get_price(
         low_price: PriceType,
         close_price: PriceType,
         *,
-        mode: PriceMode
+        mode: PriceMode = PriceMode.CLOSE
 ) -> PriceType:
+    print("mode", mode)
     match mode:
         case PriceMode.CLOSE:
             return close_price
@@ -101,20 +100,20 @@ def get_price(
         case PriceMode.LOW:
             return low_price
         case PriceMode.MEDIAN:
-            return get_median(high_price, low_price)
+            return _get_median(high_price, low_price)
         case PriceMode.TYPICAL:
-            return get_typical(high_price, low_price, close_price)
+            return _get_typical(high_price, low_price, close_price)
         case PriceMode.WEIGHTED:
-            return get_weighted(high_price, low_price, close_price)
+            return _get_weighted(high_price, low_price, close_price)
 
 
-def get_median(high_price: float, low_price: float) -> PriceType:
+def _get_median(high_price: float, low_price: float) -> PriceType:
     return (high_price + low_price) / 2
 
 
-def get_typical(high_price: float, low_price: float, close_price: float) -> PriceType:
+def _get_typical(high_price: float, low_price: float, close_price: float) -> PriceType:
     return (high_price + low_price + close_price) / 3
 
 
-def get_weighted(high_price: float, low_price: float, close_price: float) -> PriceType:
+def _get_weighted(high_price: float, low_price: float, close_price: float) -> PriceType:
     return (high_price + low_price + close_price * 2) / 4
