@@ -109,14 +109,14 @@ class Indicator(ABC):
     """Indicator.
     """
 
-    properties: tuple[type, ...] | None = None
+    # properties: tuple[type, ...] | None = None
     dataset: DataSeriesType = None
     buffer = None
 
-    def __init_subclass__(cls, **kwargs: Any):
-        props = tuple(filter(lambda x: x.__name__ != Indicator.__name__, cls.__bases__))
-        if props:
-            Indicator.properties = props
+    # def __init_subclass__(cls, **kwargs: Any):
+    #     props = tuple(filter(lambda x: x.__name__ != Indicator.__name__, cls.__bases__))
+    #     if props:
+    #         Indicator.properties = props
 
     def __init__(self, /, dataset: DataSeriesType, **kwargs: Any) -> None:
         self.dataset = dataset
@@ -138,12 +138,18 @@ class Indicator(ABC):
         # print(price_open, price_high, price_low, price_close)
 
     def __call__(self, *, bar: KeyType = None, **kwargs: Any) -> ResultType:
-        if kwargs != {} and Indicator.properties is not None:
+        if kwargs != {}:  # and Indicator.properties is not None:
             for key in kwargs:
-                _key = "_" + key
-                if _key or key in self.__dict__:
-                    print("****", _key, kwargs[key], self.__dict__)
-                    self.__dict__[_key] = kwargs[key]
+                # _key = "_" + key
+                if key in self.__dict__:
+                    # print("****", _key, kwargs[key], self.__dict__)
+                    self.__dict__[key] = kwargs[key]
+                else:
+                    _key = "_" + key
+                    if _key in self.__dict__:
+                        self.__dict__[_key] = kwargs[key]
+
+                # self.__dict__[key] = kwargs[key]
 
             # for prop in Indicator.properties:
             # print(prop.__dict__)
@@ -202,6 +208,22 @@ class Indicator(ABC):
 
         if isinstance(self.dataset, list):
             del self.dataset[key]
+
+    # def set_props(self, **kwargs: Any) -> None:
+    #     if kwargs != {}:
+    #         for key in kwargs:
+    #             #_key = "_" + key
+    #             if key in self.__dict__:
+    #                 #print("****", _key, kwargs[key], self.__dict__)
+    #                 self.__dict__[key] = kwargs[key]
+    #             else:
+    #                 _key = "_" + key
+    #                 if _key in self.__dict__:
+    #                     self.__dict__[_key] = kwargs[key]
+    #
+    #     def asf(_key):
+    #         if _key in self.__dict__:
+    #             self.__dict__[_key] = kwargs[key]
 
     @abstractmethod
     def calculate(self, *args: Any, **kwargs: Any) -> ResultType:

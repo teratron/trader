@@ -1,7 +1,7 @@
 from techind.indicator import Indicator, DataSeriesType, ResultType, KeyType, DataType, BarType
-from techind.properties.method import Method, MethodMode, MethodType
+from techind.properties.method import Method
 from techind.properties.period import Period
-from techind.properties.price import Price, PriceMode
+from techind.properties.price import Price
 
 
 class MA(Indicator, Period, Method, Price):
@@ -31,7 +31,7 @@ class MA(Indicator, Period, Method, Price):
     );
     """
 
-    # __slots__ = tuple(Indicator._slots_)
+    # __slots__ = ("_period", "_method", "_price")
 
     def __init__(
             self,
@@ -39,8 +39,8 @@ class MA(Indicator, Period, Method, Price):
             dataset: DataSeriesType,
             *,
             period: int = 7,
-            method: MethodType = MethodMode.SMA,
-            price: PriceMode = PriceMode.CLOSE
+            method: int = Method.SMA,
+            price: int = Price.CLOSE
     ) -> None:
         super().__init__(dataset)
         Period.__init__(self, period)
@@ -63,18 +63,6 @@ class MA(Indicator, Period, Method, Price):
         # maa.extend([None] * 2)
         # print(maa)
 
-    # def properties(
-    #         self,
-    #         *,
-    #         period: int = 7,
-    #         method: int = Method.SMA,
-    #         price: PriceMode = PriceMode.CLOSE
-    # ) -> None:
-    #     print("************", period, method, price)
-    #     Period.__init__(self, period)
-    #     Method.__init__(self, method)
-    #     Price.__init__(self, price)
-
     def calculate(self, *, bar: KeyType = None) -> ResultType:
         if self.buffer is None:
             pass
@@ -93,7 +81,6 @@ class MA(Indicator, Period, Method, Price):
 
         print("calculate", self.dataset, bar, data)
         return self.moving_average(data, self.period)
-
 
 
 if __name__ == "__main__":

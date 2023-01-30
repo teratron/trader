@@ -1,9 +1,4 @@
-from enum import IntEnum
-
 from typing import NamedTuple
-
-
-# PriceType = float
 
 
 class OHLCType(NamedTuple):
@@ -13,65 +8,60 @@ class OHLCType(NamedTuple):
     close_price: float
 
 
-class PriceMode(IntEnum):
-    """PriceMode.
-
+class Price:
+    """Price.
+    
     Ценовые константы:
 
     * CLOSE -- Цена закрытия (0).
     * OPEN -- Цена открытия (1).
     * HIGH -- Максимальная за период цена (2).
     * LOW -- Минимальная за период цена (3).
-    * MEDIAN -- Медианная цена, `(high+low)/2` (4).
-    * TYPICAL -- Типичная цена, `(high+low+close)/3` (5).
-    * WEIGHTED -- Взвешенная цена закрытия, `(high+low+close+close)/4` (6).
+    * MEDIAN -- Медианная цена (4).
+    * TYPICAL -- Типичная цена (5).
+    * WEIGHTED -- Взвешенная цена закрытия (6).
     """
 
-    CLOSE = 0
+    CLOSE: int = 0
     """Цена закрытия."""
 
-    OPEN = 1
+    OPEN: int = 1
     """Цена открытия."""
 
-    HIGH = 2
+    HIGH: int = 2
     """Максимальная за период цена."""
 
-    LOW = 3
+    LOW: int = 3
     """Минимальная за период цена."""
 
-    MEDIAN = 4
-    """Медианная цена, `(high+low)/2`."""
+    MEDIAN: int = 4
+    """Медианная цена."""
 
-    TYPICAL = 5
-    """Типичная цена, `(high+low+close)/3`."""
+    TYPICAL: int = 5
+    """Типичная цена."""
 
-    WEIGHTED = 6
-    """Взвешенная цена закрытия, `(high+low+close+close)/4`."""
-
-
-class Price:
-    """Price.
-    """
+    WEIGHTED: int = 6
+    """Взвешенная цена закрытия."""
 
     slots: str = "_price"
 
-    def __init__(self, price: PriceMode) -> None:
-        self._price: PriceMode = _check(price)
+    def __init__(self, price: int) -> None:
+        self._price: int = _check(price)
 
     @property
-    def price(self) -> PriceMode:
+    def price(self) -> int:
         return self._price
 
     @price.setter
-    def price(self, value: PriceMode) -> None:
+    def price(self, value: int) -> None:
         self._price = _check(value)
 
     def get_price(self, bar: OHLCType) -> float:
         return get_price(*bar, mode=self._price)
 
 
-def _check(value: PriceMode) -> PriceMode:
-    if PriceMode.CLOSE <= value <= PriceMode.WEIGHTED:
+def _check(value: int) -> int:
+    if Price.CLOSE <= value <= Price.WEIGHTED:
         return value
     else:
         raise ValueError("")  # TODO: add text exception
@@ -83,32 +73,44 @@ def get_price(
         low_price: float,
         close_price: float,
         *,
-        mode: PriceMode = PriceMode.CLOSE
+        mode: int = Price.CLOSE
 ) -> float:
     match mode:
-        case PriceMode.CLOSE:
+        case Price.CLOSE:
             return close_price
-        case PriceMode.OPEN:
+        case Price.OPEN:
             return open_price
-        case PriceMode.HIGH:
+        case Price.HIGH:
             return high_price
-        case PriceMode.LOW:
+        case Price.LOW:
             return low_price
-        case PriceMode.MEDIAN:
+        case Price.MEDIAN:
             return _get_median(high_price, low_price)
-        case PriceMode.TYPICAL:
+        case Price.TYPICAL:
             return _get_typical(high_price, low_price, close_price)
-        case PriceMode.WEIGHTED:
+        case Price.WEIGHTED:
             return _get_weighted(high_price, low_price, close_price)
 
 
 def _get_median(high_price: float, low_price: float) -> float:
+    """Медианная цена.
+
+    `(high + low) / 2`
+    """
     return (high_price + low_price) / 2
 
 
 def _get_typical(high_price: float, low_price: float, close_price: float) -> float:
+    """Типичная цена.
+
+    `(high + low + close) / 3`
+    """
     return (high_price + low_price + close_price) / 3
 
 
 def _get_weighted(high_price: float, low_price: float, close_price: float) -> float:
+    """Взвешенная цена закрытия.
+
+    `(high + low + close + close) / 4`
+    """
     return (high_price + low_price + close_price * 2) / 4

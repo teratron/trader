@@ -8,7 +8,6 @@ class Period:
 
     def __init__(self, period: int) -> None:
         self._period: int = _check(period)
-        self.period = 3
 
     @property
     def period(self) -> int:
