@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from datetime import datetime
-from typing import Any, Union, Sequence, NamedTuple, Callable
+
+from typing import Any, Union, Sequence, NamedTuple
 
 
 class OHLCType(NamedTuple):
@@ -52,12 +53,6 @@ DataSeriesType = Union[
 ]
 
 BufferType = Union[
-    # list[
-    #     Union[
-    #         list[Optional[float]],
-    #         Optional[float]
-    #     ]
-    # ],
     list[list[float]],
     list[list[int | float]],
     list[tuple[int, float]],
@@ -113,22 +108,17 @@ class Indicator(ABC):
     """Indicator.
     """
 
-    # slots: Union[list[str], str] = [
-    #     Symbol.slots,
-    #     Timeframe.slots
-    # ]
-
     name = "indicator"
     type = "Indicator"
     description = __doc__
-    # properties = None
+    properties = None
     dataset: DataSeriesType = None
     buffer = None
 
-    # def __init_subclass__(cls, **kwargs: Any):
-    #     props = list(filter(lambda x: x.__name__ == "Properties", cls.__bases__))
-    #     if props:
-    #         Indicator.properties = props[0]
+    def __init_subclass__(cls, **kwargs: Any):
+        props = list(filter(lambda x: x.__name__ != __class__.__name__, cls.__bases__))
+        if props:
+            Indicator.properties = props
 
     def __init__(self, /, dataset: DataSeriesType, **kwargs: Any) -> None:
         self.dataset = dataset
@@ -150,11 +140,11 @@ class Indicator(ABC):
         # print(price_open, price_high, price_low, price_close)
 
     def __call__(self, *, bar: KeyType = None, **kwargs: Any) -> ResultType:
-        # if kwargs != {} and Indicator.properties is not None:
-        if kwargs != {}:
-            # Indicator.__dict__["properties"].__init__(self, **kwargs)
-            # print("************",kwargs)
-            self.__class__.properties(self, **kwargs)
+        if kwargs != {} and Indicator.properties is not None:
+            for prop in Indicator.properties:
+                for key in kwargs:
+                    if key in prop.__dict__:
+                        prop.__init__(self, kwargs[key])
 
         if bar is not None:
             return self.__getitem__(bar)
@@ -176,24 +166,24 @@ class Indicator(ABC):
 
         raise IndexError("Неверный индекс")
 
-    def __setitem__(self, key: int, value: float) -> None:
+    def __setitem__(self, key: KeyType, value: float) -> None:
         if not isinstance(key, int):
             raise TypeError("Индекс должен быть целым числом")
 
         if key < 0:
             raise IndexError("Индекс должен быть неотрицательным числом")
 
-        match self.buffer:
+        match self.dataset:
             case list():
                 if key >= self.len_dataset:
                     off = key + 1 - self.len_dataset
-                    self.buffer.extend([None] * off)
+                    self.dataset.extend([None] * off)
 
-                self.buffer[key] = value
+                self.dataset[key] = value
             case _:
                 raise TypeError("Буфер индикатора не соответствует необходимому типу данных")
 
-    def __delitem__(self, key: int) -> None:
+    def __delitem__(self, key: KeyType) -> None:
         if not isinstance(key, int):
             raise TypeError("Индекс должен быть целым числом")
 
@@ -201,15 +191,5 @@ class Indicator(ABC):
             del self.dataset[key]
 
     @abstractmethod
-    def properties(self, **kwargs: Any) -> None:
-        ...
-
-    @abstractmethod
     def calculate(self, *args: Any, **kwargs: Any) -> ResultType:
         ...
-
-
-def _init(obj: type, class_name: str, call: Callable[[type], None]) -> None:
-    props = list(filter(lambda x: x.__name__ == class_name, obj.__bases__))
-    if props:
-        call(props[0])

@@ -2,7 +2,8 @@ from enum import IntEnum
 
 from typing import NamedTuple
 
-PriceType = float
+
+# PriceType = float
 
 
 class OHLCType(NamedTuple):
@@ -55,7 +56,6 @@ class Price:
     slots: str = "_price"
 
     def __init__(self, price: PriceMode) -> None:
-        # super().__init__(0.123)
         self._price: PriceMode = _check(price)
 
     @property
@@ -66,20 +66,25 @@ class Price:
     def price(self, value: PriceMode) -> None:
         self._price = _check(value)
 
-    def get_price(self, /, *bar: OHLCType) -> PriceType:
-        # return get_price(open_price, high_price, low_price, close_price, self._price)
+    def get_price(self, *bar: OHLCType) -> float:
         return get_price(*bar, mode=self._price)
 
 
+def _check(value: PriceMode) -> PriceMode:
+    if PriceMode.CLOSE <= value <= PriceMode.WEIGHTED:
+        return value
+    else:
+        raise ValueError("")  # TODO: add text exception
+
+
 def get_price(
-        open_price: PriceType,
-        high_price: PriceType,
-        low_price: PriceType,
-        close_price: PriceType,
+        open_price: float,
+        high_price: float,
+        low_price: float,
+        close_price: float,
         *,
         mode: PriceMode = PriceMode.CLOSE
-) -> PriceType:
-    print("mode", mode)
+) -> float:
     match mode:
         case PriceMode.CLOSE:
             return close_price
@@ -97,20 +102,13 @@ def get_price(
             return _get_weighted(high_price, low_price, close_price)
 
 
-def _get_median(high_price: float, low_price: float) -> PriceType:
+def _get_median(high_price: float, low_price: float) -> float:
     return (high_price + low_price) / 2
 
 
-def _get_typical(high_price: float, low_price: float, close_price: float) -> PriceType:
+def _get_typical(high_price: float, low_price: float, close_price: float) -> float:
     return (high_price + low_price + close_price) / 3
 
 
-def _get_weighted(high_price: float, low_price: float, close_price: float) -> PriceType:
+def _get_weighted(high_price: float, low_price: float, close_price: float) -> float:
     return (high_price + low_price + close_price * 2) / 4
-
-
-def _check(value: PriceMode) -> PriceMode:
-    if PriceMode.CLOSE <= value <= PriceMode.WEIGHTED:
-        return value
-    else:
-        raise ValueError("")  # TODO: add text exception
