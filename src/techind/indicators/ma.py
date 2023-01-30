@@ -1,5 +1,5 @@
 from techind.indicator import Indicator, DataSeriesType, ResultType, KeyType, DataType, BarType
-from techind.properties.method import Method, MethodMode
+from techind.properties.method import Method, MethodMode, MethodType
 from techind.properties.period import Period
 from techind.properties.price import Price, PriceMode
 
@@ -33,18 +33,14 @@ class MA(Indicator, Period, Method, Price):
 
     # __slots__ = tuple(Indicator._slots_)
 
-    name = "ma"
-    type = "MA"
-    description = __doc__
-
     def __init__(
             self,
             /,
             dataset: DataSeriesType,
             *,
             period: int = 7,
-            method: MethodMode | int = MethodMode.SMA,
-            price: PriceMode | int = PriceMode.CLOSE
+            method: MethodType = MethodMode.SMA,
+            price: PriceMode = PriceMode.CLOSE
     ) -> None:
         super().__init__(dataset)
         Period.__init__(self, period)

@@ -66,7 +66,7 @@ class Price:
     def price(self, value: PriceMode) -> None:
         self._price = _check(value)
 
-    def get_price(self, *bar: OHLCType) -> float:
+    def get_price(self, bar: OHLCType) -> float:
         return get_price(*bar, mode=self._price)
 
 

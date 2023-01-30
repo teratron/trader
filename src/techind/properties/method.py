@@ -1,4 +1,5 @@
 from enum import IntEnum
+from typing import Union
 
 from techind.indicator import DataType, ResultType
 
@@ -25,6 +26,9 @@ class MethodMode(IntEnum):
 
     LWMA = 3
     """Линейно-взвешенное усреднение."""
+
+
+MethodType = Union[MethodMode, int]
 
 
 class Method:
@@ -68,17 +72,14 @@ def moving_average(data: DataType, period: int, *, mode: MethodMode = MethodMode
         data = list(data)
 
     match mode:
-        case MethodMode.SMA:  # SMA = SUM(CLOSE(i), N) / N
-            return [
-                round(sum(data[i:period + i]) / period, 6)
-                for i in range(length - period + 1)
-            ]
-        case MethodMode.EMA:  # EMA = CLOSE(i) * P + EMA(i - 1) * (100 - P)
-            pass
-        case MethodMode.SMMA:  # SMMA(0) = SUM(CLOSE(i), N) / N; SMMA = (SUM(CLOSE(i), N) - SMMA(i - 1) + CLOSE(i)) / N
-            pass
-        case MethodMode.LWMA:  # LWMA = SUM(CLOSE(i) * i, N) / SUM(i, N)
-            pass
+        case MethodMode.SMA:
+            return _get_sma(data, period)
+        case MethodMode.EMA:
+            return _get_ema(data, period)
+        case MethodMode.SMMA:
+            return _get_smma(data, period)
+        case MethodMode.LWMA:
+            return _get_lwma(data, period)
 
     return None
 
@@ -95,28 +96,20 @@ def _get_sma(data: DataType, period: int) -> ResultType:
     ]
 
 
-def _get_ema(data: DataType, period: int) -> ResultType:
+def _get_ema(_data: DataType, _period: int) -> ResultType:
     """Экспоненциальное усреднение.
 
     EMA = CLOSE(i) * P + EMA(i - 1) * (100 - P)
     """
-    length = len(data) - period + 1
-    return [
-        sum(data[i:period + i]) / period
-        for i in range(length)
-    ]
+    return 0.0
 
 
-def _get_smma(data: DataType, period: int) -> ResultType:
+def _get_smma(_data: DataType, _period: int) -> ResultType:
     """Сглаженное усреднение.
 
     SMMA(0) = SUM(CLOSE(i), N) / N; SMMA = (SUM(CLOSE(i), N) - SMMA(i - 1) + CLOSE(i)) / N
     """
-    length = len(data) - period + 1
-    return [
-        sum(data[i:period + i]) / period
-        for i in range(length)
-    ]
+    return 0.0
 
 
 def _get_lwma(data: DataType, period: int) -> ResultType:

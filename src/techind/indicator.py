@@ -70,9 +70,10 @@ ResultType = Union[
     #     ]
     # ],
     # tuple[Optional[float]],
+
     list[tuple[float, ...]],
-    # list[float | None],
-    list[Union[float | None]],
+    list[float | None],
+    list[Union[float, None]],
     tuple[float, ...],
     float,
     None
@@ -108,15 +109,12 @@ class Indicator(ABC):
     """Indicator.
     """
 
-    name = "indicator"
-    type = "Indicator"
-    description = __doc__
-    properties = None
+    properties: tuple[type, ...] | None = None
     dataset: DataSeriesType = None
     buffer = None
 
     def __init_subclass__(cls, **kwargs: Any):
-        props = list(filter(lambda x: x.__name__ != __class__.__name__, cls.__bases__))
+        props = tuple(filter(lambda x: x.__name__ != Indicator.__name__, cls.__bases__))
         if props:
             Indicator.properties = props
 
@@ -128,8 +126,8 @@ class Indicator(ABC):
         if isinstance(self.dataset, Sequence):
             self.len_dataset = len(self.dataset)
 
-        print(self.len_dataset)
-        print(self.dataset)
+        # print(self.len_dataset)
+        # print(self.dataset)
 
         # match self.dataset:
         #     case list():
@@ -141,10 +139,25 @@ class Indicator(ABC):
 
     def __call__(self, *, bar: KeyType = None, **kwargs: Any) -> ResultType:
         if kwargs != {} and Indicator.properties is not None:
-            for prop in Indicator.properties:
-                for key in kwargs:
-                    if key in prop.__dict__:
-                        prop.__init__(self, kwargs[key])
+            for key in kwargs:
+                _key = "_" + key
+                if _key or key in self.__dict__:
+                    print("****", _key, kwargs[key], self.__dict__)
+                    self.__dict__[_key] = kwargs[key]
+
+            # for prop in Indicator.properties:
+            # print(prop.__dict__)
+            # for key, value in kwargs.items():
+            # for key in kwargs:
+            # print(key, value)
+            # if key in prop.__dict__:
+            # print(key, kwargs[key], prop)
+            # print(prop.__getattribute__(key))
+            # prop.__setattr__(key, kwargs[key])
+            # print(prop.__dict__[key], kwargs[key])
+            # prop.__init__(self, kwargs[key])
+            # prop.__dict__.update(kwargs.item())
+            # kwargs[key]
 
         if bar is not None:
             return self.__getitem__(bar)

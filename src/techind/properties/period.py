@@ -7,7 +7,8 @@ class Period:
     max_value: int = 10000
 
     def __init__(self, period: int) -> None:
-        self._period: int = Period._check(period)
+        self._period: int = _check(period)
+        self.period = 3
 
     @property
     def period(self) -> int:
@@ -15,11 +16,11 @@ class Period:
 
     @period.setter
     def period(self, value: int) -> None:
-        self._period = self._check(value)
+        self._period = _check(value)
 
-    @classmethod
-    def _check(cls, value: int) -> int:
-        if cls.min_value <= value <= cls.max_value:
-            return value
-        else:
-            raise ValueError("")  # TODO: add text exception
+
+def _check(value: int) -> int:
+    if Period.min_value <= value <= Period.max_value:
+        return value
+    else:
+        raise ValueError("")  # TODO: add text exception
