@@ -2,7 +2,7 @@ from techind.indicator import Indicator
 from techind.properties.method import Method
 from techind.properties.period import Period
 from techind.properties.price import Price
-from techind.types import BarType, DataType, DataSeriesType, ResultType, KeyType
+from techind.types import DataSeriesType, ResultType, KeyType
 
 
 class MA(Indicator, Period, Method, Price):
@@ -10,8 +10,8 @@ class MA(Indicator, Period, Method, Price):
 
     Class `MA`:
 
-    * MA(dataset=[])
-    * MA(dataset=[], period=24, method=0, price=0)
+    * MA(data_series=[])
+    * MA(data_series=[], period=24, method=0, price=0)
 
     Instance `ma = MA()`:
 
@@ -43,86 +43,72 @@ class MA(Indicator, Period, Method, Price):
             method: int = Method.SMA,
             price: int = Price.CLOSE
     ) -> None:
-        super().__init__(dataset)
         Period.__init__(self, period)
         Method.__init__(self, method)
         Price.__init__(self, price)
-
-        pr = []
-        # for i in range(self.len_dataset):
-        #     pr.append(round(self.get_price(*self.dataset[i][1:5]), 6))
-
-        if isinstance(self.dataset, list):
-            for d in self.dataset:
-                # print(d, type(d))
-                if d is BarType:
-                    pr.append(round(self.get_price(*d[1:5]), 6))
-
-        # print(pr)
-        # maa = moving_average(pr, self.period)  # : list[float | None]
-        # maa.extend([None] * 2)
-        # print(maa)
-
-        # print(self.len_dataset)
-        # print(self.dataset)
-
-        # match self.dataset:
-        #     case list():
-        #         print("++++++", len(self.dataset[0][1:5]))
-
-        # pr = self.get(*self.dataset[0][1:5])
-        # print(pr)
-        # print(price_open, price_high, price_low, price_close)
+        super().__init__(dataset)
 
     def calculate(self, *, bar: KeyType = None) -> ResultType:
-        if self.buffer is None:
-            pass
+        if bar is None:
+            if self.data_buffer is None:
+                self.data_buffer = []
+                # print(BarType, Type[BarType])
 
-        data: DataType = []
-        match bar:
-            case None:
-                return None
-            case int():
-                data = self.dataset[bar:bar + self.period]
+            if isinstance(self.data_series, list):
+                self.data_buffer = []
+                for row in self.data_series:
+                    if isinstance(row, tuple):
+                        # if row is tuple.BarType:
+                        self.data_buffer.append(self.get_price(*row[1:5]))
 
-            case slice():
-                data = self.dataset[bar.start:bar.stop + self.period - 1]
-            case _:
-                raise IndexError("Неверный индекс")
+                print(self.data_buffer)
+                print(list(map(lambda x: round(x, 6), self.moving_average(self.data_buffer, self.period))))
 
-        print("calculate", self.dataset, bar, data)
-        return self.moving_average(data, self.period)
+        # else:
+        #     match bar:
+        #         case int():
+        #             data = self.data_series[bar:bar + self.period]
+        #         case slice():
+        #             data = self.data_series[bar.start:bar.stop + self.period - 1]
+        #         case _:
+        #             raise IndexError("Неверный индекс")
+
+        # print("calculate", self.data_series, bar, data)
+        # return self.moving_average(data, self.period)
 
 
 if __name__ == "__main__":
-    # from techind.data import eurusd_rates
+    from techind.data import eurusd_rates
+
+    if isinstance(eurusd_rates, list):
+        ma = MA(eurusd_rates, period=3, method=Method.SMA, price=Price.WEIGHTED)
+        # print(ma)
+        print(ma.__dict__)
+
+    # from techind.data import test_rates
+    # if isinstance(test_rates, list):
+    #     ma = MA(test_rates, period=3, method=0, price=0)
+
+    # data_series: DataSeriesType = [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 7.0]
     #
-    # if isinstance(eurusd_rates, list):
-    #     ma = MA(eurusd_rates, period=3, method=0, price=PriceMode.WEIGHTED)
-    #     # ta = MA(test_rates, period=3, method=0, price=0)
+    # ma = MA(data_series, period=4, method=0)
+    # print(ma)
+    # print(ma.__dict__)
     #
-    #     print(ma.__dict__)
-
-    data_series: DataSeriesType = [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 7.0]
-
-    ma = MA(data_series, period=4, method=0)
-    print(ma)
-    print(ma.__dict__)
-
-    print(ma(period=3, method=1, price=3, bar=3))
-    print(ma.__dict__)
-    print(ma(period=5, method=3, price=2))
-    print(ma.__dict__)
-    print(ma(bar=slice(1, 3)))
-    print(ma.__dict__)
-    print(ma())
-    print(ma.__dict__)
-    print(ma[2])
-    print(ma.__dict__)
-    print(ma[:2])
-    print(ma.__dict__)
-    ma.method = 0
-    print(ma.__dict__)
-    ma[2] = 9.61
-    print(ma.__dict__)
-    del ma[1]
+    # print(ma(period=3, method=1, price=3, bar=3))
+    # print(ma.__dict__)
+    # print(ma(period=5, method=3, price=2))
+    # print(ma.__dict__)
+    # print(ma(bar=slice(1, 3)))
+    # print(ma.__dict__)
+    # print(ma())
+    # print(ma.__dict__)
+    # print(ma[2])
+    # print(ma.__dict__)
+    # print(ma[:2])
+    # print(ma.__dict__)
+    # ma.method = 0
+    # print(ma.__dict__)
+    # ma[2] = 9.61
+    # print(ma.__dict__)
+    # del ma[1]

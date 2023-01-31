@@ -1,6 +1,6 @@
 from enum import IntEnum
 
-from typing import Union, Sequence, NamedTuple
+from typing import Union, Sequence
 
 
 class Mode(IntEnum):
@@ -8,41 +8,45 @@ class Mode(IntEnum):
     MethodType = 1
 
 
-class OHLCType(NamedTuple):
-    open_price: float
-    high_price: float
-    low_price: float
-    close_price: float
+# class OHLCType(NamedTuple):
+#     open_price: float
+#     high_price: float
+#     low_price: float
+#     close_price: float
 
 
-class BarType(NamedTuple):
-    time: int
-    open_price: float
-    high_price: float
-    low_price: float
-    close_price: float
-    tick_volume: int
-    spread: int
-    real_volume: int
+# class BarType(NamedTuple):
+#     time: int
+#     open_price: float
+#     high_price: float
+#     low_price: float
+#     close_price: float
+#     tick_volume: int
+#     spread: int
+#     real_volume: int
 
 
-class TickType(NamedTuple):
-    time: int
-    ask: float
-    bid: float
-    a: float
-    tick_volume: int
-    spread: int
-    real_volume: int
-    b: float
+# class TickType(NamedTuple):
+#     time: int
+#     ask: float
+#     bid: float
+#     a: float
+#     tick_volume: int
+#     spread: int
+#     real_volume: int
+#     b: float
 
+
+OHLCType = tuple[float, float, float, float]
+BarType = tuple[int, float, float, float, float, int, int, int]
+TickType = tuple[int, float, float, float, int, int, int, float]
 
 DataSeriesType = Union[
-    list[float],
-    list[tuple[float, float, float, float]],  # OHLC Data
-    list[tuple[int, float, float, float, float, int, int, int]],  # Bar Data
-    list[tuple[int, float, float, float, int, int, int, float]],  # Tick Data
-    Sequence[Union[OHLCType, BarType, TickType]],
+    # list[float],
+    # list[tuple[float, float, float, float]],  # OHLC Data
+    # list[tuple[int, float, float, float, float, int, int, int]],  # Bar Data
+    # list[tuple[int, float, float, float, int, int, int, float]],  # Tick Data
+    Sequence[Union[OHLCType, BarType, TickType, float]],
     None
 ]
 

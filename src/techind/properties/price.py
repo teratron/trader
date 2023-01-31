@@ -47,7 +47,8 @@ class Price:
     def price(self, value: int) -> None:
         self._price = _check(value)
 
-    def get_price(self, bar: OHLCType) -> float:
+    # def get_price(self, *bar: float) -> float:
+    def get_price(self, *bar: OHLCType) -> float:
         return get_price(*bar, mode=self._price)
 
 
@@ -106,3 +107,10 @@ def _get_weighted(high_price: float, low_price: float, close_price: float) -> fl
     `(high + low + close + close) / 4`
     """
     return (high_price + low_price + close_price * 2) / 4
+
+# pr = Price(2)
+# print(pr)
+# #print(get_price(*OHLCType(1.06481, 1.06506, 1.06477, 1.06489), mode=pr.price))
+# print(get_price(1.06481, 1.06506, 1.06477, 1.06489, mode=pr.price))
+# print(pr.get_price(1.06481, 1.06506, 1.06477, 1.06489))
+# print(pr.price)

@@ -9,15 +9,18 @@ class Indicator(ABC):
     """Indicator.
     """
 
-    dataset: DataSeriesType = None
-    buffer: BufferType = None
+    data_series: DataSeriesType = None
+    data_buffer: BufferType = None
     len_dataset: int = 0
 
     def __init__(self, /, dataset: DataSeriesType, **kwargs: Any) -> None:
-        self.dataset = dataset
+        self.data_series = dataset
 
-        if isinstance(self.dataset, list):
-            self.len_dataset = len(self.dataset)
+        if isinstance(self.data_series, list):
+            self.len_dataset = len(self.data_series)
+
+            if self.len_dataset > 0:
+                self.calculate()
 
     def __call__(self, *, bar: KeyType = None, **kwargs: Any) -> ResultType:
         self.set_properties(**kwargs)
@@ -36,7 +39,7 @@ class Indicator(ABC):
                 valid = 0 <= start < stop <= self.len_dataset
 
         if valid:
-            return self.calculate(bar=key)
+            return self.calculate(bar=key)  # TODO:
 
         raise IndexError("Неверный индекс")
 

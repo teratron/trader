@@ -41,7 +41,6 @@
 # def __delitem__(self, key: KeyType) -> None:
 #     if not isinstance(key, int):
 #         raise TypeError("Индекс должен быть целым числом")
-#
 #     if isinstance(self.dataset, list):
 #         del self.dataset[key]
 
@@ -55,8 +54,10 @@
 
 # class Slot:
 #     slots: Union[list[str], str] = "_period"
-#
 #     def __init_subclass__(cls, **kwargs: Any) -> None:
 #         _slots = [Period.slots]
 #         _slots.extend(cls.slots)
 #         print("__init_subclass__:Period", cls, cls.slots, _slots, kwargs)
+
+
+# print([i.__dict__ for i in MA.__bases__[MA.__bases__.index(MA.__base__) + 1:]])
