@@ -39,7 +39,7 @@ class MA(Indicator, Period, Method, Price):
             /,
             dataset: DataSeriesType,
             *,
-            period: int = 7,
+            period: int = 3,
             method: int = Method.SMA,
             price: int = Price.CLOSE
     ) -> None:
@@ -47,12 +47,12 @@ class MA(Indicator, Period, Method, Price):
         Method.__init__(self, method)
         Price.__init__(self, price)
         super().__init__(dataset)
+        # print("****", self.__dict__)
 
     def calculate(self, *, bar: KeyType = None) -> ResultType:
         if bar is None:
             if self.data_buffer is None:
                 self.data_buffer = []
-                # print(BarType, Type[BarType])
 
             if isinstance(self.data_series, list):
                 for row in self.data_series:
@@ -61,7 +61,7 @@ class MA(Indicator, Period, Method, Price):
                         self.data_buffer.append(self.get_price(*row[1:5]))
 
                 print(self.data_buffer)
-                print(list(map(lambda x: round(x, 6), self.moving_average(self.data_buffer, self.period))))
+                print("ma", list(map(lambda x: round(x, 6), self.moving_average(self.data_buffer, self.period))))
 
         # else:
         #     match bar:
@@ -81,7 +81,7 @@ if __name__ == "__main__":
     from techind.data import eurusd_rates
 
     if isinstance(eurusd_rates, list):
-        ma = MA(eurusd_rates, period=3, method=Method.SMA, price=Price.WEIGHTED)
+        ma = MA(eurusd_rates, period=3, method=Method.SMMA, price=Price.WEIGHTED)
         # print(ma)
         print(ma.__dict__)
 

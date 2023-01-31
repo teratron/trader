@@ -75,10 +75,9 @@ def _get_sma(data: DataType, period: int) -> list[float]:
 
     `SMA = sum(price(i), n) / n`
     """
-    length: int = len(data) - period + 1
     return [
         sum(data[i:i + period]) / period
-        for i in range(length)
+        for i in range(len(data) - period + 1)
     ]
 
 
@@ -90,13 +89,20 @@ def _get_ema(_data: DataType, _period: int) -> list[float]:
     return [0.0]
 
 
-def _get_smma(_data: DataType, _period: int) -> list[float]:
+def _get_smma(data: DataType, period: int) -> list[float]:
     """Сглаженное усреднение.
 
     `SMMA(0) = sum(price(i), n) / n`
     `SMMA = (sum(price(i), n) - smma(i - 1) + price(i)) / n`
     """
-    return [0.0]
+    array: list[float] = []
+    array.extend(_get_sma(data[:period], period))
+    for i in range(1, len(data) - period + 1):
+        n = 0
+        for j in range(i, i + period):
+            n += data[j]
+        array.append((n - array[i - 1] + data[i]) / period)
+    return array
 
 
 def _get_lwma(data: DataType, period: int) -> list[float]:
@@ -118,4 +124,43 @@ def _get_lwma(data: DataType, period: int) -> list[float]:
 
     return array
 
-# print(_get_sma([0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 7.0], 7))
+
+def _get_lwma2(data: DataType, period: int) -> list[float]:
+    """Линейно-взвешенное усреднение.
+
+    `LWMA = sum(price(i) * i, n) / sum(i, n)`
+    """
+    array: list[float] = []
+    for i in range(len(data) - period + 1):
+        n = 0
+        m = 0.0
+        for j in range(i, i + period):
+            k = j + 1
+            n += k
+            m += data[j] * k
+        array.append(m / n)
+    return array
+
+
+# print(_get_smma([0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0], 3))
+# print(_get_lwma([0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0], 3))
+# print(_get_lwma2([0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0], 3))
+
+
+if __name__ == "__main__":
+    import time
+
+    cum = 0
+    epoch = 0
+    while epoch < 100:
+        count = 0
+        start = time.time()
+        while count < 1000:
+            _get_lwma([0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 0.0, 1.0, 2.0, 3.0], 3)
+            # _get_lwma2([0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 0.0, 1.0, 2.0, 3.0], 3)
+            count += 1
+
+        cum += time.time() - start
+        epoch += 1
+
+    print(cum / epoch, epoch)

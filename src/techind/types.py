@@ -1,11 +1,8 @@
-from enum import IntEnum
-
 from typing import Union, Sequence
 
-
-class Mode(IntEnum):
-    PriceType = 0
-    MethodType = 1
+# class Mode(IntEnum):
+#     PriceType = 0
+#     MethodType = 1
 
 
 # class OHLCType(NamedTuple):
@@ -53,7 +50,6 @@ DataSeriesType = Union[
 BufferType = Union[
     list[float],
     list[list[float | int | bool]],
-    list[tuple[int, float]],  # (time, value, ...)
     None
 ]
 
@@ -61,9 +57,7 @@ ResultType = Union[
     float,
     list[float],
     list[tuple[float, ...]],
-    list[tuple[int, float]],  # (time, value, ...)
     tuple[float, ...],
-    tuple[int, float],  # (time, value, ...)
     None
 ]
 

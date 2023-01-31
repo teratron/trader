@@ -109,8 +109,5 @@ def _get_weighted(high_price: float, low_price: float, close_price: float) -> fl
     return (high_price + low_price + close_price * 2) / 4
 
 # pr = Price(2)
-# print(pr)
-# #print(get_price(*OHLCType(1.06481, 1.06506, 1.06477, 1.06489), mode=pr.price))
 # print(get_price(1.06481, 1.06506, 1.06477, 1.06489, mode=pr.price))
 # print(pr.get_price(1.06481, 1.06506, 1.06477, 1.06489))
-# print(pr.price)

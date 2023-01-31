@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+
 from typing import Any
 
 from techind.types import DataSeriesType, BufferType, ResultType, KeyType
@@ -58,16 +59,16 @@ class Indicator(ABC):
         if kwargs != {}:
             for key in kwargs:
                 if key in self.__dict__:
-                    # print("****", _key, kwargs[key], self.__dict__)
+                    # print("****", key, kwargs[key], self.__dict__)
                     self.__dict__[key] = kwargs[key]
                 else:
-                    _key = "_" + key
-                    if _key in self.__dict__:
-                        self.__dict__[_key] = kwargs[key]
+                    key = "_" + key
+                    if key in self.__dict__:
+                        self.__dict__[key] = kwargs[key]
 
-        # def asf(_key):
-        #     if _key in self.__dict__:
-        #         self.__dict__[_key] = kwargs[key]
+                # while key not in self.__dict__:
+                #     key = "_" + key
+                # self.__dict__[key] = kwargs[key]
 
     @abstractmethod
     def calculate(self, *args: Any, **kwargs: Any) -> ResultType:
