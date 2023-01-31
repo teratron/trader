@@ -60,14 +60,14 @@ def moving_average(
         data = list(data)
 
     match mode:
-        case Method.SMA:
-            return _get_sma(data, period)
         case Method.EMA:
             return _get_ema(data, period)
         case Method.SMMA:
             return _get_smma(data, period)
         case Method.LWMA:
             return _get_lwma(data, period)
+        case Method.SMA | _:
+            return _get_sma(data, period)
 
 
 def _get_sma(data: DataType, period: int) -> list[float]:

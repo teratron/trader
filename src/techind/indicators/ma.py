@@ -55,7 +55,6 @@ class MA(Indicator, Period, Method, Price):
                 # print(BarType, Type[BarType])
 
             if isinstance(self.data_series, list):
-                self.data_buffer = []
                 for row in self.data_series:
                     if isinstance(row, tuple):
                         # if row is tuple.BarType:
@@ -75,6 +74,7 @@ class MA(Indicator, Period, Method, Price):
 
         # print("calculate", self.data_series, bar, data)
         # return self.moving_average(data, self.period)
+        return None
 
 
 if __name__ == "__main__":

@@ -1,5 +1,5 @@
-from techind.indicator import DataSeriesType
 from techind.indicators.ma import MA
+from techind.types import DataSeriesType
 
 
 class MACD(MA):
@@ -17,10 +17,6 @@ class MACD(MA):
         ENUM_APPLIED_PRICE  applied_price        // тип цены или handle
     );
     """
-
-    name = "macd"
-    type = "MACD"
-    description = __doc__
 
     print("MACD")
 

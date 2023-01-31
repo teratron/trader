@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-
 from typing import Any
 
 from techind.types import DataSeriesType, BufferType, ResultType, KeyType
@@ -44,13 +43,13 @@ class Indicator(ABC):
         raise IndexError("Неверный индекс")
 
     def __setitem__(self, key: KeyType, value: ResultType) -> None:
-        if not isinstance(key, KeyType) or not isinstance(value, ResultType):
+        if not isinstance(key, int | slice) or not isinstance(value, float):
             raise TypeError("Неверный тип индекса")
 
         print("Нет возможности вносить изменения в данные")
 
     def __delitem__(self, key: KeyType) -> None:
-        if not isinstance(key, KeyType):
+        if not isinstance(key, int | slice):
             raise TypeError("Неверный тип индекса")
 
         print("Нет возможности удалять данные")
