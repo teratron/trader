@@ -1,7 +1,8 @@
-from techind.indicator import Indicator, DataSeriesType, ResultType, KeyType, DataType, BarType
+from techind.indicator import Indicator
 from techind.properties.method import Method
 from techind.properties.period import Period
 from techind.properties.price import Price
+from techind.types import BarType, DataType, DataSeriesType, ResultType, KeyType
 
 
 class MA(Indicator, Period, Method, Price):
@@ -46,7 +47,6 @@ class MA(Indicator, Period, Method, Price):
         Period.__init__(self, period)
         Method.__init__(self, method)
         Price.__init__(self, price)
-        # self.properties(period=period, method=method, price=price)
 
         pr = []
         # for i in range(self.len_dataset):
@@ -62,6 +62,17 @@ class MA(Indicator, Period, Method, Price):
         # maa = moving_average(pr, self.period)  # : list[float | None]
         # maa.extend([None] * 2)
         # print(maa)
+
+        # print(self.len_dataset)
+        # print(self.dataset)
+
+        # match self.dataset:
+        #     case list():
+        #         print("++++++", len(self.dataset[0][1:5]))
+
+        # pr = self.get(*self.dataset[0][1:5])
+        # print(pr)
+        # print(price_open, price_high, price_low, price_close)
 
     def calculate(self, *, bar: KeyType = None) -> ResultType:
         if self.buffer is None:
@@ -94,7 +105,7 @@ if __name__ == "__main__":
 
     data_series: DataSeriesType = [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 7.0]
 
-    ma = MA(data_series, period=4, method=3)
+    ma = MA(data_series, period=4, method=0)
     print(ma)
     print(ma.__dict__)
 
@@ -110,7 +121,8 @@ if __name__ == "__main__":
     print(ma.__dict__)
     print(ma[:2])
     print(ma.__dict__)
-    ma[2] = 9.61
-    print(ma.__dict__)
     ma.method = 0
     print(ma.__dict__)
+    ma[2] = 9.61
+    print(ma.__dict__)
+    del ma[1]

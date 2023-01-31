@@ -1,4 +1,4 @@
-from techind.indicator import DataType, ResultType
+from techind.types import DataType
 
 
 class Method:
@@ -24,8 +24,6 @@ class Method:
     LWMA: int = 3
     """Линейно-взвешенное усреднение."""
 
-    slots: str = "_method"
-
     def __init__(self, method: int) -> None:
         self._method: int = _check(method)
 
@@ -37,7 +35,7 @@ class Method:
     def method(self, value: int) -> None:
         self._method = _check(value)
 
-    def moving_average(self, data: DataType, period: int) -> ResultType:
+    def moving_average(self, data: DataType, period: int) -> list[float]:
         return moving_average(data, period, mode=self._method)
 
 
@@ -45,17 +43,18 @@ def _check(value: int) -> int:
     if Method.SMA <= value <= Method.LWMA:
         return value
     else:
-        raise ValueError("")  # TODO: add text exception
+        raise ValueError("Константа метода не соответствует существующим значениям")
 
 
-def moving_average(data: DataType, period: int, *, mode: int = Method.SMA) -> ResultType:
+def moving_average(
+        data: DataType,
+        period: int,
+        *,
+        mode: int = Method.SMA
+) -> list[float]:
     """Скользящая средняя."""
-    length = len(data)
-    if period > length:
-        print(f"Период `{period=}` превышает длину массива `{length=}`")
-        return None
-    elif period == length:
-        return sum(data) / period
+    if period > len(data):
+        raise ValueError("Период превышает длину массива")
 
     if not isinstance(data, list):
         data = list(data)
@@ -70,10 +69,8 @@ def moving_average(data: DataType, period: int, *, mode: int = Method.SMA) -> Re
         case Method.LWMA:
             return _get_lwma(data, period)
 
-    return None
 
-
-def _get_sma(data: DataType, period: int) -> ResultType:
+def _get_sma(data: DataType, period: int) -> list[float]:
     """Простое усреднение.
 
     `SMA = sum(price(i), n) / n`
@@ -85,24 +82,24 @@ def _get_sma(data: DataType, period: int) -> ResultType:
     ]
 
 
-def _get_ema(_data: DataType, _period: int) -> ResultType:
+def _get_ema(_data: DataType, _period: int) -> list[float]:
     """Экспоненциальное усреднение.
 
     `EMA = price(i) * p + ema(i - 1) * (100 - p)`
     """
-    return 0.0
+    return [0.0]
 
 
-def _get_smma(_data: DataType, _period: int) -> ResultType:
+def _get_smma(_data: DataType, _period: int) -> list[float]:
     """Сглаженное усреднение.
 
     `SMMA(0) = sum(price(i), n) / n`
     `SMMA = (sum(price(i), n) - smma(i - 1) + price(i)) / n`
     """
-    return 0.0
+    return [0.0]
 
 
-def _get_lwma(data: DataType, period: int) -> ResultType:
+def _get_lwma(data: DataType, period: int) -> list[float]:
     """Линейно-взвешенное усреднение.
 
     `LWMA = sum(price(i) * i, n) / sum(i, n)`
@@ -120,3 +117,5 @@ def _get_lwma(data: DataType, period: int) -> ResultType:
         array[i] /= n
 
     return array
+
+# print(_get_sma([0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 7.0], 7))

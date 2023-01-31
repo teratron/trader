@@ -1,11 +1,4 @@
-from typing import NamedTuple
-
-
-class OHLCType(NamedTuple):
-    open_price: float
-    high_price: float
-    low_price: float
-    close_price: float
+from techind.types import OHLCType
 
 
 class Price:
@@ -43,8 +36,6 @@ class Price:
     WEIGHTED: int = 6
     """Взвешенная цена закрытия."""
 
-    slots: str = "_price"
-
     def __init__(self, price: int) -> None:
         self._price: int = _check(price)
 
@@ -64,7 +55,7 @@ def _check(value: int) -> int:
     if Price.CLOSE <= value <= Price.WEIGHTED:
         return value
     else:
-        raise ValueError("")  # TODO: add text exception
+        raise ValueError("Константа цены не соответствует существующим значениям")
 
 
 def get_price(
@@ -75,6 +66,7 @@ def get_price(
         *,
         mode: int = Price.CLOSE
 ) -> float:
+    """Формирование цены."""
     match mode:
         case Price.CLOSE:
             return close_price

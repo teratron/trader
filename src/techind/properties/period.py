@@ -2,9 +2,8 @@ class Period:
     """Period.
     """
 
-    slots: str = "_period"
-    min_value: int = 1
-    max_value: int = 10000
+    MIN_VALUE: int = 1
+    MAX_VALUE: int = 10000
 
     def __init__(self, period: int) -> None:
         self._period: int = _check(period)
@@ -19,7 +18,7 @@ class Period:
 
 
 def _check(value: int) -> int:
-    if Period.min_value <= value <= Period.max_value:
+    if Period.MIN_VALUE <= value <= Period.MAX_VALUE:
         return value
     else:
-        raise ValueError("")  # TODO: add text exception
+        raise ValueError("Значение периода не соответствует заданному интервалу")
