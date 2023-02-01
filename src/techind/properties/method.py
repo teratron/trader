@@ -85,6 +85,7 @@ def _get_ema(_data: DataType, _period: int) -> list[float]:
     """Экспоненциальное усреднение.
 
     `EMA = price(i) * p + ema(i - 1) * (100 - p)`
+    EMA = ((CLOSE (i) - (CLOSE (i-1)) * P + EMA[i - 1];
     """
     return [0.0]
 
