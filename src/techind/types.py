@@ -48,7 +48,8 @@ DataSeriesType = Union[
 ]
 
 BufferType = Union[
-    list[float],
+    list[float | None],
+    list[tuple[int, float]],
     list[list[float | int | bool]],
     None
 ]

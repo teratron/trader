@@ -20,15 +20,6 @@ class MA(Indicator, Method, Price):  # Period,
     * ma()
     * ma(period=24, method=0, price=0, bar=42)
     * ma(period=24, method=0, price=0, bar=slice(0, 42))
-
-    int iMA(
-        string               symbol,            // имя символа
-        ENUM_TIMEFRAMES      period,            // период
-        int                  ma_period,         // период усреднения
-        int                  ma_shift,          // смещение индикатора по горизонтали
-        ENUM_MA_METHOD       ma_method,         // тип сглаживания
-        ENUM_APPLIED_PRICE   applied_price      // тип цены или handle
-    );
     """
 
     # __slots__ = ("_period", "_method", "_price")
@@ -36,17 +27,17 @@ class MA(Indicator, Method, Price):  # Period,
     def __init__(
             self,
             /,
-            dataset: DataSeriesType,
+            dataset: DataSeriesType = None,
             *,
             period: int = 3,
             method: int = Method.SMA,
             price: int = Price.CLOSE
     ) -> None:
-        # Period.__init__(self, period)
-        Method.__init__(self, method, period)
+        Method.__init__(self, period, method)
         Price.__init__(self, price)
-        super().__init__(dataset)
-        # print("****", self.__dict__)
+
+        if dataset is not None:
+            super().__init__(dataset)
 
     def calculate(self, *, bar: KeyType = None) -> ResultType:
         if bar is None:
@@ -54,13 +45,20 @@ class MA(Indicator, Method, Price):  # Period,
                 self.data_buffer = []
 
             if isinstance(self.data_series, list):
-                for row in self.data_series:
-                    if isinstance(row, tuple):
-                        # if row is tuple.BarType:
-                        self.data_buffer.append(self.get_price(*row[1:5]))
+                for row in self.data_series:  # TODO:
+                    match row:
+                        case tuple():
+                            # if isinstance(row, BarType):
+                            self.data_buffer.append(self.get_price(*row[1:5]))
+                        case float():
+                            self.data_buffer = self.data_series[:]
+                            break
 
                 print(self.data_buffer)
-                print("ma", list(map(lambda x: round(x, 6), self.moving_average(self.data_buffer))))  #, self.period
+                self.data_buffer = self.moving_average(self.data_buffer)
+                self.data_buffer.extend([None] * (self.len_dataset - len(self.data_buffer)))
+                print(self.data_buffer)
+                # print("ma", list(map(lambda x: round(x, 6), self.moving_average(self.data_buffer))))
 
         # else:
         #     match bar:
@@ -90,7 +88,6 @@ if __name__ == "__main__":
 
     # data_series: DataSeriesType = [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 7.0]
     # ma = MA(data_series, period=4, method=0)
-    # print(ma)
     # print(ma.__dict__)
     # print(ma(period=3, method=1, price=3, bar=3))
     # print(ma.__dict__)

@@ -19,12 +19,13 @@ def main() -> None:
         plt.plot(frame_eurusd[0], frame_eurusd[4], 'b-o', label='close')
 
         # Moving Average
-        ma = MA(eurusd_rates, period=3, method=MA.SMMA, price=MA.WEIGHTED)
+        ma = MA(eurusd_rates, period=3, method=MA.EMA, price=MA.CLOSE)
+        # ma = MA(eurusd_rates, period=2, method=MA.SMA, price=MA.CLOSE)
         if ma:
             frame_buffer = pd.DataFrame(ma.data_buffer)
             # print(frame_buffer)
 
-            plt.plot(frame_eurusd[0], frame_buffer[0], 'black', label='weighted')
+            plt.plot(frame_eurusd[0], frame_buffer[0], 'black', label='ma')
 
         plt.title('EURUSD Rates')
         plt.legend(loc='upper left')

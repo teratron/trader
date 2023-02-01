@@ -319,3 +319,5 @@ cython_debug/
 #*.json
 #!examples/json/config/*.json
 #!tests/pynn/testdata/*.json
+
+*.png

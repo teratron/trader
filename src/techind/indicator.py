@@ -55,16 +55,18 @@ class Indicator(ABC):
 
         print("Нет возможности удалять данные")
 
-    def set_properties(self, **kwargs: Any) -> None:
+    def set_properties(self, **kwargs: Any) -> None:  # TODO:
         if kwargs != {}:
             for key in kwargs:
                 if key in self.__dict__:
                     # print("****", key, kwargs[key], self.__dict__)
                     self.__dict__[key] = kwargs[key]
                 else:
-                    key = "_" + key
-                    if key in self.__dict__:
-                        self.__dict__[key] = kwargs[key]
+                    _key = "_" + key
+                    if _key in self.__dict__:
+                        # print("__dict__", self.__dict__)
+                        # print("****", _key, kwargs[key], self.__dict__)
+                        self.__dict__[_key] = kwargs[key]
 
                 # while key not in self.__dict__:
                 #     key = "_" + key

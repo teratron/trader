@@ -1,6 +1,6 @@
-class Price:
-    """Price.
-    
+class Mode:
+    """Mode - тип цены.
+
     Ценовые константы:
 
     * CLOSE -- Цена закрытия (0).
@@ -33,6 +33,11 @@ class Price:
     WEIGHTED: int = 6
     """Взвешенная цена закрытия."""
 
+
+class Price(Mode):
+    """Price.
+    """
+
     def __init__(self, price: int) -> None:
         self._price: int = Price._check(price)
 
@@ -52,7 +57,7 @@ class Price:
             raise ValueError("Константа цены не соответствует существующим значениям")
 
     def get_price(self, *bar: float) -> float:
-        return get_price(*bar, mode=self._price)
+        return get_price(*bar, price=self._price)
 
 
 def get_price(
@@ -61,10 +66,10 @@ def get_price(
         low_price: float,
         close_price: float,
         *,
-        mode: int = Price.CLOSE
+        price: int = Price.CLOSE
 ) -> float:
     """Формирование цены."""
-    match mode:
+    match price:
         case Price.OPEN:
             return open_price
         case Price.HIGH:

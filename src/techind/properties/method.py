@@ -2,8 +2,8 @@ from techind.properties.period import Period
 from techind.types import DataType
 
 
-class Method(Period):
-    """Method.
+class Mode:
+    """Mode - типы сглаживания.
 
     Усреднённые константы:
 
@@ -25,9 +25,14 @@ class Method(Period):
     LWMA: int = 3
     """Линейно-взвешенное усреднение."""
 
-    def __init__(self, /, method: int, period: int = 3) -> None:
-        self._method: int = Method._check(method)
+
+class Method(Period, Mode):
+    """Method.
+    """
+
+    def __init__(self, /, period: int, method: int) -> None:
         super().__init__(period)
+        self._method: int = Method._check(method)
 
     @property
     def method(self) -> int:
@@ -45,10 +50,11 @@ class Method(Period):
             raise ValueError("Константа метода не соответствует существующим значениям")
 
     def moving_average(self, dataset: DataType) -> list[float]:
-        return moving_average(dataset, period=self._period, method=self._method)
+        # return moving_average(dataset, period=self._period, method=self._method)
+        return moving_average(dataset, period=self.period, method=self._method)
 
 
-def moving_average(dataset: DataType, *, period: int = 3, method: int = Method.SMA) -> list[float]:
+def moving_average(dataset: DataType, *, period: int, method: int) -> list[float]:
     """Скользящая средняя."""
     if period > len(dataset):
         raise ValueError("Период превышает длину массива")
@@ -85,7 +91,7 @@ def _get_ema(dataset: DataType, period: int) -> list[float]:
     `EMA(0) = sum(price(i), n) / n`
     `EMA = price(i) * p + ema(i - 1) * (1 - p)`
     """
-    factor: float = 2.0 / (period + 1)
+    factor: float = 2 / (period + 1)
     delta: float = 1 - factor
     array: list[float] = []
     array.extend(_get_sma(dataset[:period], period))
