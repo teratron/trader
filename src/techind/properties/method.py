@@ -110,26 +110,6 @@ def _get_lwma(data: DataType, period: int) -> list[float]:
 
     `LWMA = sum(price(i) * i, n) / sum(i, n)`
     """
-    length: int = len(data) - period + 1
-    array: list[float] = [0.0] * length
-
-    for i in range(length):
-        n = 0
-        for y in range(i, i + period):
-            z = y + 1
-            n += z
-            array[i] += data[y] * z
-
-        array[i] /= n
-
-    return array
-
-
-def _get_lwma2(data: DataType, period: int) -> list[float]:
-    """Линейно-взвешенное усреднение.
-
-    `LWMA = sum(price(i) * i, n) / sum(i, n)`
-    """
     array: list[float] = []
     for i in range(len(data) - period + 1):
         n = 0
@@ -141,26 +121,6 @@ def _get_lwma2(data: DataType, period: int) -> list[float]:
         array.append(m / n)
     return array
 
-
+# if __name__ == "__main__":
 # print(_get_smma([0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0], 3))
 # print(_get_lwma([0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0], 3))
-# print(_get_lwma2([0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0], 3))
-
-
-if __name__ == "__main__":
-    import time
-
-    cum = 0
-    epoch = 0
-    while epoch < 100:
-        count = 0
-        start = time.time()
-        while count < 1000:
-            _get_lwma([0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 0.0, 1.0, 2.0, 3.0], 3)
-            # _get_lwma2([0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 0.0, 1.0, 2.0, 3.0], 3)
-            count += 1
-
-        cum += time.time() - start
-        epoch += 1
-
-    print(cum / epoch, epoch)

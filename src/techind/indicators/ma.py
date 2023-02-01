@@ -78,7 +78,7 @@ class MA(Indicator, Period, Method, Price):
 
 
 if __name__ == "__main__":
-    from techind.data import eurusd_rates
+    from techind.dataset import eurusd_rates
 
     if isinstance(eurusd_rates, list):
         ma = MA(eurusd_rates, period=3, method=Method.SMMA, price=Price.WEIGHTED)
