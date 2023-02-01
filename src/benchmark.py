@@ -34,38 +34,40 @@ def benchmark(repeat: int = 1000, epoch: int = 100) -> OuterType:
 
     return outer
 
-
-@benchmark(epoch=1000)
-def _get_lwma1(data: list[float], period: int) -> list[float]:
-    length: int = len(data) - period + 1
-    array: list[float] = [0.0] * length
-
-    for i in range(length):
-        n = 0
-        for y in range(i, i + period):
-            z = y + 1
-            n += z
-            array[i] += data[y] * z
-
-        array[i] /= n
-
-    return array
-
-
-@benchmark(epoch=1000)
-def _get_lwma2(data: list[float], period: int) -> list[float]:
-    array: list[float] = []
-    for i in range(len(data) - period + 1):
-        n = 0
-        m = 0.0
-        for j in range(i, i + period):
-            k = j + 1
-            n += k
-            m += data[j] * k
-        array.append(m / n)
-    return array
-
-
-if __name__ == "__main__":
-    print(_get_lwma1([0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0], 3))
-    print(_get_lwma2([0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0], 3))
+# @benchmark(epoch=1000)
+# def _get_lwma1(data: list[float], period: int) -> list[float]:
+#     array: list[float] = []
+#
+#     for i in range(len(data) - period + 1):
+#         n = 0
+#         m = 0.0
+#         for j in range(i, i + period):
+#             k = j + 1
+#             n += k
+#             m += data[j] * k
+#
+#         array.append(m / n)
+#
+#     return array
+#
+#
+# @benchmark(epoch=1000)
+# def _get_lwma2(data: list[float], period: int) -> list[float]:
+#     length: int = len(data) - period + 1
+#     array: list[float] = [0.0] * length
+#
+#     for i in range(length):
+#         n = 0
+#         for y in range(i, i + period):
+#             z = y + 1
+#             n += z
+#             array[i] += data[y] * z
+#
+#         array[i] /= n
+#
+#     return array
+#
+#
+# if __name__ == "__main__":
+#     print(_get_lwma1([0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0], 3))
+#     print(_get_lwma2([0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0], 3))

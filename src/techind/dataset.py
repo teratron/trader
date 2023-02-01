@@ -1,7 +1,7 @@
 """"
     Tick Data:
     ----------
-    time        ask      bid     *    *  time           volume  *
+    time        bid      ask     *    *  time_msc       flags   volume_real
     1547563093, 1.58846, 1.5887, 0.0, 0, 1547563093040, 134,    0.0
 """
 

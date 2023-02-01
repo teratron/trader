@@ -1,11 +1,10 @@
 from techind.indicator import Indicator
 from techind.properties.method import Method
-from techind.properties.period import Period
 from techind.properties.price import Price
 from techind.types import DataSeriesType, ResultType, KeyType
 
 
-class MA(Indicator, Period, Method, Price):
+class MA(Indicator, Method, Price):  # Period,
     """Moving Average.
 
     Class `MA`:
@@ -43,8 +42,8 @@ class MA(Indicator, Period, Method, Price):
             method: int = Method.SMA,
             price: int = Price.CLOSE
     ) -> None:
-        Period.__init__(self, period)
-        Method.__init__(self, method)
+        # Period.__init__(self, period)
+        Method.__init__(self, method, period)
         Price.__init__(self, price)
         super().__init__(dataset)
         # print("****", self.__dict__)
@@ -61,7 +60,7 @@ class MA(Indicator, Period, Method, Price):
                         self.data_buffer.append(self.get_price(*row[1:5]))
 
                 print(self.data_buffer)
-                print("ma", list(map(lambda x: round(x, 6), self.moving_average(self.data_buffer, self.period))))
+                print("ma", list(map(lambda x: round(x, 6), self.moving_average(self.data_buffer))))  #, self.period
 
         # else:
         #     match bar:
@@ -81,7 +80,7 @@ if __name__ == "__main__":
     from techind.dataset import eurusd_rates
 
     if isinstance(eurusd_rates, list):
-        ma = MA(eurusd_rates, period=3, method=Method.SMMA, price=Price.WEIGHTED)
+        ma = MA(eurusd_rates, period=2, method=Method.SMMA, price=Price.WEIGHTED)
         # print(ma)
         print(ma.__dict__)
 
@@ -90,11 +89,9 @@ if __name__ == "__main__":
     #     ma = MA(test_rates, period=3, method=0, price=0)
 
     # data_series: DataSeriesType = [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 7.0]
-    #
     # ma = MA(data_series, period=4, method=0)
     # print(ma)
     # print(ma.__dict__)
-    #
     # print(ma(period=3, method=1, price=3, bar=3))
     # print(ma.__dict__)
     # print(ma(period=5, method=3, price=2))

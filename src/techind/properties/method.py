@@ -1,7 +1,8 @@
+from techind.properties.period import Period
 from techind.types import DataType
 
 
-class Method:
+class Method(Period):
     """Method.
 
     Усреднённые константы:
@@ -24,8 +25,9 @@ class Method:
     LWMA: int = 3
     """Линейно-взвешенное усреднение."""
 
-    def __init__(self, method: int) -> None:
-        self._method: int = _check(method)
+    def __init__(self, /, method: int, period: int = 3) -> None:
+        self._method: int = Method._check(method)
+        super().__init__(period)
 
     @property
     def method(self) -> int:
@@ -33,20 +35,20 @@ class Method:
 
     @method.setter
     def method(self, value: int) -> None:
-        self._method = _check(value)
+        self._method = Method._check(value)
 
-    def moving_average(self, dataset: DataType, period: int) -> list[float]:
-        return moving_average(dataset, period=2, mode=self._method)  # TODO:
+    @classmethod
+    def _check(cls, value: int) -> int:
+        if cls.SMA <= value <= cls.LWMA:
+            return value
+        else:
+            raise ValueError("Константа метода не соответствует существующим значениям")
+
+    def moving_average(self, dataset: DataType) -> list[float]:
+        return moving_average(dataset, period=self._period, method=self._method)
 
 
-def _check(value: int) -> int:
-    if Method.SMA <= value <= Method.LWMA:
-        return value
-    else:
-        raise ValueError("Константа метода не соответствует существующим значениям")
-
-
-def moving_average(dataset: DataType, *, period: int = 3, mode: int = Method.SMA) -> list[float]:
+def moving_average(dataset: DataType, *, period: int = 3, method: int = Method.SMA) -> list[float]:
     """Скользящая средняя."""
     if period > len(dataset):
         raise ValueError("Период превышает длину массива")
@@ -54,7 +56,7 @@ def moving_average(dataset: DataType, *, period: int = 3, mode: int = Method.SMA
     if not isinstance(dataset, list):
         dataset = list(dataset)
 
-    match mode:
+    match method:
         case Method.EMA:
             return _get_ema(dataset, period)
         case Method.SMMA:
@@ -65,58 +67,71 @@ def moving_average(dataset: DataType, *, period: int = 3, mode: int = Method.SMA
             return _get_sma(dataset, period)
 
 
-def _get_sma(data: DataType, period: int) -> list[float]:
+def _get_sma(dataset: DataType, period: int) -> list[float]:
     """Простое усреднение.
 
     `SMA = sum(price(i), n) / n`
     """
     return [
-        sum(data[i:i + period]) / period
-        for i in range(len(data) - period + 1)
+        sum(dataset[i:i + period]) / period
+        for i in range(len(dataset) - period + 1)
     ]
 
 
-def _get_ema(_data: DataType, _period: int) -> list[float]:
+def _get_ema(dataset: DataType, period: int) -> list[float]:
     """Экспоненциальное усреднение.
 
-    `EMA = price(i) * p + ema(i - 1) * (100 - p)`
-    EMA = ((CLOSE (i) - (CLOSE (i-1)) * P + EMA[i - 1];
+    `p = 2 / (n + 1)`
+    `EMA(0) = sum(price(i), n) / n`
+    `EMA = price(i) * p + ema(i - 1) * (1 - p)`
     """
-    return [0.0]
+    factor: float = 2.0 / (period + 1)
+    delta: float = 1 - factor
+    array: list[float] = []
+    array.extend(_get_sma(dataset[:period], period))
+
+    for i in range(1, len(dataset) - period + 1):
+        array.append(dataset[i] * factor + array[i - 1] * delta)
+
+    return array
 
 
-def _get_smma(data: DataType, period: int) -> list[float]:
+def _get_smma(dataset: DataType, period: int) -> list[float]:
     """Сглаженное усреднение.
 
     `SMMA(0) = sum(price(i), n) / n`
     `SMMA = (sum(price(i), n) - smma(i - 1) + price(i)) / n`
     """
     array: list[float] = []
-    array.extend(_get_sma(data[:period], period))
-    for i in range(1, len(data) - period + 1):
-        n = 0
+    array.extend(_get_sma(dataset[:period], period))
+
+    for i in range(1, len(dataset) - period + 1):
+        n = 0.0
         for j in range(i, i + period):
-            n += data[j]
-        array.append((n - array[i - 1] + data[i]) / period)
+            n += dataset[j]
+        array.append((n - array[i - 1] + dataset[i]) / period)
+
     return array
 
 
-def _get_lwma(data: DataType, period: int) -> list[float]:
+def _get_lwma(dataset: DataType, period: int) -> list[float]:
     """Линейно-взвешенное усреднение.
 
     `LWMA = sum(price(i) * i, n) / sum(i, n)`
     """
     array: list[float] = []
-    for i in range(len(data) - period + 1):
+
+    for i in range(len(dataset) - period + 1):
         n = 0
         m = 0.0
         for j in range(i, i + period):
             k = j + 1
             n += k
-            m += data[j] * k
+            m += dataset[j] * k
         array.append(m / n)
+
     return array
 
 # if __name__ == "__main__":
-# print(_get_smma([0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0], 3))
-# print(_get_lwma([0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0], 3))
+#   print(_get_smma([0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0], 3))
+#   print(_get_lwma([0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0], 3))
