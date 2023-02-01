@@ -35,8 +35,8 @@ class Method:
     def method(self, value: int) -> None:
         self._method = _check(value)
 
-    def moving_average(self, data: DataType, period: int) -> list[float]:
-        return moving_average(data, period, mode=self._method)
+    def moving_average(self, dataset: DataType, period: int) -> list[float]:
+        return moving_average(dataset, period=2, mode=self._method)  # TODO:
 
 
 def _check(value: int) -> int:
@@ -46,28 +46,23 @@ def _check(value: int) -> int:
         raise ValueError("Константа метода не соответствует существующим значениям")
 
 
-def moving_average(
-        data: DataType,
-        period: int,
-        *,
-        mode: int = Method.SMA
-) -> list[float]:
+def moving_average(dataset: DataType, *, period: int = 3, mode: int = Method.SMA) -> list[float]:
     """Скользящая средняя."""
-    if period > len(data):
+    if period > len(dataset):
         raise ValueError("Период превышает длину массива")
 
-    if not isinstance(data, list):
-        data = list(data)
+    if not isinstance(dataset, list):
+        dataset = list(dataset)
 
     match mode:
         case Method.EMA:
-            return _get_ema(data, period)
+            return _get_ema(dataset, period)
         case Method.SMMA:
-            return _get_smma(data, period)
+            return _get_smma(dataset, period)
         case Method.LWMA:
-            return _get_lwma(data, period)
+            return _get_lwma(dataset, period)
         case Method.SMA | _:
-            return _get_sma(data, period)
+            return _get_sma(dataset, period)
 
 
 def _get_sma(data: DataType, period: int) -> list[float]:
