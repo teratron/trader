@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 
 @dataclass
-class Mode:
+class PriceMode:
     """Mode - тип цены.
 
     Ценовые константы:
@@ -38,13 +38,14 @@ class Mode:
     """Взвешенная цена закрытия."""
 
 
-class Price(Mode):
+class Price(PriceMode):
     """Price.
     """
 
     def __init__(self, price: int) -> None:
         # self._price: int = Price._check(price)
         self.__dict__["price"]: int = Price._check(price)
+        self.__dict__.setdefault("price", Price.CLOSE)
         # print(self.__dict__)
 
     @property

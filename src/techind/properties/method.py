@@ -5,7 +5,7 @@ from techind.types import DataType
 
 
 @dataclass
-class Mode:
+class MethodeMode:
     """Mode - типы сглаживания.
 
     Усреднённые константы:
@@ -29,14 +29,15 @@ class Mode:
     """Линейно-взвешенное усреднение."""
 
 
-class Method(Period, Mode):
+class Method(Period, MethodeMode):
     """Method.
     """
 
-    def __init__(self, /, period: int, method: int) -> None:
+    def __init__(self, /, method: int, period: int) -> None:
         super().__init__(period)
         # self._method: int = Method._check(method)
         self.__dict__["method"]: int = Method._check(method)
+        self.__dict__.setdefault("method", Method.SMA)
         # print(self.__dict__)
 
     @property

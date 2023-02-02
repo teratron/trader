@@ -61,3 +61,16 @@
 
 
 # print([i.__dict__ for i in MA.__bases__[MA.__bases__.index(MA.__base__) + 1:]])
+
+
+# if kwargs != {}:
+#     for key in kwargs:
+#         if key in self.__dict__:
+#             # print("****", key, kwargs[key], self.__dict__)
+#             self.__dict__[key] = kwargs[key]
+#         else:
+#             _key = "_" + key
+#             if _key in self.__dict__:
+#                 # print("__dict__", self.__dict__)
+#                 # print("****", _key, kwargs[key], self.__dict__)
+#                 self.__dict__[_key] = kwargs[key]

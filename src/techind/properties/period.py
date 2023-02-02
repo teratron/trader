@@ -11,6 +11,7 @@ class Period:
         # self._period: int = Period._check(period)
         # self.period: int = Period._check(period)
         self.__dict__["period"]: int = Period._check(period)
+        self.__dict__.setdefault("period", 3)
         #print(self.__dict__)
 
     @property
