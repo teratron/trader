@@ -1,4 +1,4 @@
-from typing import Union, Sequence
+from typing import Union, Sequence, TypeVar, Type, NewType
 
 # class Mode(IntEnum):
 #     PriceType = 0
@@ -33,10 +33,16 @@ from typing import Union, Sequence
 #     real_volume: int
 #     b: float
 
+_BT = TypeVar("BT", int, float, float, float, float, int, int, int)
+
+# print(BT, Type[BT])
 
 OHLCType = tuple[float, float, float, float]
 BarType = tuple[int, float, float, float, float, int, int, int]
 TickType = tuple[int, float, float, float, int, int, int, float]
+
+BT = NewType("BT", tuple[int, float, float, float, float, int, int, int])
+print(BT, Type[BT])
 
 DataSeriesType = Union[
     # list[float],

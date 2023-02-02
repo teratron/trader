@@ -1,3 +1,7 @@
+from dataclasses import dataclass
+
+
+@dataclass
 class Mode:
     """Mode - тип цены.
 
@@ -39,15 +43,19 @@ class Price(Mode):
     """
 
     def __init__(self, price: int) -> None:
-        self._price: int = Price._check(price)
+        # self._price: int = Price._check(price)
+        self.__dict__["price"]: int = Price._check(price)
+        # print(self.__dict__)
 
     @property
     def price(self) -> int:
-        return self._price
+        # return self._price
+        return self.__dict__["price"]
 
     @price.setter
     def price(self, value: int) -> None:
-        self._price = Price._check(value)
+        # self._price = Price._check(value)
+        self.__dict__["price"] = Price._check(value)
 
     @classmethod
     def _check(cls, value: int) -> int:
@@ -57,7 +65,7 @@ class Price(Mode):
             raise ValueError("Константа цены не соответствует существующим значениям")
 
     def get_price(self, *bar: float) -> float:
-        return get_price(*bar, price=self._price)
+        return get_price(*bar, price=self.price)
 
 
 def get_price(

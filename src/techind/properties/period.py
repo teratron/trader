@@ -9,17 +9,20 @@ class Period:
 
     def __init__(self, period: int) -> None:
         # self._period: int = Period._check(period)
+        # self.period: int = Period._check(period)
         self.__dict__["period"]: int = Period._check(period)
-        print(self.__dict__)
+        #print(self.__dict__)
 
     @property
     def period(self) -> int:
         # return self._period
+        #return self.period
         return self.__dict__["period"]
 
     @period.setter
     def period(self, value: int) -> None:
         # self._period = Period._check(value)
+        #self.period = Period._check(value)
         self.__dict__["period"] = Period._check(value)
 
     @classmethod

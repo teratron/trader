@@ -45,14 +45,16 @@ class MA(Indicator, Method, Price):  # Period,
                 self.data_buffer = []
 
             if isinstance(self.data_series, list):
-                for row in self.data_series:  # TODO:
-                    match row:
-                        case tuple():
-                            # if isinstance(row, BarType):
-                            self.data_buffer.append(self.get_price(*row[1:5]))
-                        case float():
-                            self.data_buffer = self.data_series[:]
-                            break
+                match self.data_series[0]:
+                    case float():
+                        self.data_buffer = self.data_series[:]
+                    case tuple():
+                        for row in self.data_series:  # TODO:
+                            match row:
+                                case tuple():
+                                    # if isinstance(row, BT):
+                                    #     print("-*/**")
+                                    self.data_buffer.append(self.get_price(*row[1:5]))
 
                 print(self.data_buffer)
                 self.data_buffer = self.moving_average(self.data_buffer)
@@ -80,6 +82,7 @@ if __name__ == "__main__":
     if isinstance(eurusd_rates, list):
         ma = MA(eurusd_rates, period=2, method=Method.SMMA, price=Price.WEIGHTED)
         # print(ma)
+        ma.period = 5
         print(ma.__dict__)
 
     # from techind.data import test_rates
