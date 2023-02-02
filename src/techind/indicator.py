@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-
 from typing import Any
 
 from techind.properties.price import Price
@@ -23,14 +22,15 @@ class Indicator(ABC, Price):
             self.len_dataset = len(self.data_series)
 
             if self.len_dataset > 0:
-                if self.data_buffer is None:
-                    self.data_buffer = []
-                    # self.data_buffer.clear()
+                # if self.data_buffer is None:
+                #     self.data_buffer = []
+                #     self.data_buffer.clear()
 
                 match self.data_series[0]:
                     case float():
                         self.data_buffer = self.data_series[:]
                     case tuple():
+                        self.data_buffer = []
                         for row in self.data_series:
                             match row:
                                 case tuple():
@@ -41,15 +41,18 @@ class Indicator(ABC, Price):
                         raise ValueError("Данные не определены")
 
                 if self.len_dataset == len(self.data_buffer):
-                    self.is_ready = self.calculate()
+                    self.calculate()
+                    self.is_ready = True
 
-    def __call__(self, *, key: KeyType = None, **kwargs: Any) -> ResultType:
+    def __call__(self, *, bar: KeyType = None, **kwargs: Any) -> ResultType:
         self.set_properties(**kwargs)
-        return self.__getitem__(key)
+        return self.__getitem__(bar)
 
     def __getitem__(self, key: KeyType) -> ResultType:
-        if self.is_ready:
+        if self.is_ready and isinstance(self.data_buffer, list):
             match key:
+                case None:
+                    return None
                 case int() if 0 <= key < self.len_dataset:
                     return self.data_buffer[key]
                 case slice():
@@ -59,7 +62,7 @@ class Indicator(ABC, Price):
                     if 0 <= start < stop <= self.len_dataset:
                         return self.data_buffer[start:stop]
                 case _:
-                    raise IndexError("Неверный индекс")
+                    raise IndexError(f"Неверный индекс: {key}")
 
     def __setitem__(self, key: KeyType, value: ResultType) -> None:
         if not isinstance(key, int | slice) or not isinstance(value, float):
@@ -78,7 +81,11 @@ class Indicator(ABC, Price):
             for key in kwargs:
                 if key in self.__dict__:
                     self.__dict__[key] = kwargs[key]
+                else:
+                    _key = "_" + key
+                    if _key in self.__dict__:
+                        self.__dict__[_key] = kwargs[key]
 
     @abstractmethod
-    def calculate(self, *args: Any, **kwargs: Any) -> bool:
+    def calculate(self, *args: Any, **kwargs: Any) -> ResultType:
         ...

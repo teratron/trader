@@ -35,20 +35,15 @@ class Method(Period, MethodeMode):
 
     def __init__(self, /, method: int, period: int) -> None:
         super().__init__(period)
-        # self._method: int = Method._check(method)
-        self.__dict__["method"]: int = Method._check(method)
-        self.__dict__.setdefault("method", Method.SMA)
-        # print(self.__dict__)
+        self._method: int = Method._check(method)
 
     @property
     def method(self) -> int:
-        # return self._method
-        return self.__dict__["method"]
+        return self._method
 
     @method.setter
     def method(self, value: int) -> None:
-        # self._method = Method._check(value)
-        self.__dict__["method"] = Method._check(value)
+        self._method = Method._check(value)
 
     @classmethod
     def _check(cls, value: int) -> int:
@@ -58,8 +53,7 @@ class Method(Period, MethodeMode):
             raise ValueError("Константа метода не соответствует существующим значениям")
 
     def moving_average(self, dataset: DataType) -> list[float]:
-        # return moving_average(dataset, period=self._period, method=self._method)
-        return moving_average(dataset, period=self.period, method=self.method)
+        return moving_average(dataset, period=self._period, method=self._method)
 
 
 def moving_average(dataset: DataType, *, period: int, method: int) -> list[float]:

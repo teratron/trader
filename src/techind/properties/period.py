@@ -8,23 +8,15 @@ class Period:
     MAX_VALUE: int = 10000
 
     def __init__(self, period: int) -> None:
-        # self._period: int = Period._check(period)
-        # self.period: int = Period._check(period)
-        self.__dict__["period"]: int = Period._check(period)
-        self.__dict__.setdefault("period", 3)
-        #print(self.__dict__)
+        self._period: int = Period._check(period)
 
     @property
     def period(self) -> int:
-        # return self._period
-        #return self.period
-        return self.__dict__["period"]
+        return self._period
 
     @period.setter
     def period(self, value: int) -> None:
-        # self._period = Period._check(value)
-        #self.period = Period._check(value)
-        self.__dict__["period"] = Period._check(value)
+        self._period = Period._check(value)
 
     @classmethod
     def _check(cls, value: int) -> int:

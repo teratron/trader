@@ -1,4 +1,4 @@
-from typing import Union, Sequence
+from typing import Union, Sequence, Any
 
 # class Mode(IntEnum):
 #     PriceType = 0
@@ -43,26 +43,27 @@ BarType = tuple[int, float, float, float, float, int, int, int]
 TickType = tuple[int, float, float, float, int, int, int, float]
 
 DataSeriesType = Union[
-    # list[float],
-    # list[tuple[float, float, float, float]],  # OHLC Data
-    # list[tuple[int, float, float, float, float, int, int, int]],  # Bar Data
-    # list[tuple[int, float, float, float, int, int, int, float]],  # Tick Data
-    Sequence[Union[OHLCType, BarType, TickType, float]],
+    list[float],
+    list[tuple[float, float, float, float]],  # OHLC Data
+    list[tuple[int, float, float, float, float, int, int, int]],  # Bar Data
+    list[tuple[int, float, float, float, int, int, int, float]],  # Tick Data
+    # Sequence[Union[OHLCType, BarType, TickType, float]],
     None
 ]
 
 BufferType = Union[
     list[float | None],
-    list[tuple[int, float]],
+    # list[tuple[int, float]],
+    list[tuple[Any, ...]],
     list[list[float | int | bool]],
     None
 ]
 
 ResultType = Union[
     float,
-    list[float],
-    list[tuple[float, ...]],
-    tuple[float, ...],
+    list[float | None],
+    list[tuple[Any, ...]],
+    tuple[Any, ...],
     None
 ]
 
