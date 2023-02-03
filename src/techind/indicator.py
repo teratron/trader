@@ -1,8 +1,9 @@
 from abc import ABC, abstractmethod
+
 from typing import Any
 
 from techind.properties.price import Price
-from techind.types import DataSeriesType, BufferType, ResultType, KeyType, OHLCType, ValueType
+from techind.types import DataSeriesType, BufferType, ResultType, KeyType, ValueType
 
 
 class Indicator(ABC, Price):
@@ -26,10 +27,10 @@ class Indicator(ABC, Price):
                     case float():
                         self.data_buffer = self.data_series[:]
                     case tuple() as ds if ds is ValueType:
-                        # self.data_buffer = []
+                        self.data_buffer: list[float]
                         for row in self.data_series:
                             match row:
-                                case tuple() if row is OHLCType:
+                                case tuple():  # if row is OHLCType:
                                     # if row is tuple[float, ...]:
                                     self.data_buffer.append(self.get_price(*row[1:5]))  # TODO: OHLC
                                 case _:
