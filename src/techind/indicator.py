@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+
 from typing import Any
 
 from techind.properties.price import Price
@@ -22,10 +23,6 @@ class Indicator(ABC, Price):
             self.len_dataset = len(self.data_series)
 
             if self.len_dataset > 0:
-                # if self.data_buffer is None:
-                #     self.data_buffer = []
-                #     self.data_buffer.clear()
-
                 match self.data_series[0]:
                     case float():
                         self.data_buffer = self.data_series[:]
@@ -36,13 +33,15 @@ class Indicator(ABC, Price):
                                 case tuple():
                                     self.data_buffer.append(self.get_price(*row[1:5]))  # TODO: OHLC
                                 case _:
-                                    raise ValueError("Данные не определены")
+                                    raise ValueError(f"{__name__}: данные не определены")
                     case _:
-                        raise ValueError("Данные не определены")
+                        raise ValueError(f"{__name__}: данные не определены")
 
                 if self.len_dataset == len(self.data_buffer):
                     self.calculate()
                     self.is_ready = True
+        else:
+            raise TypeError(f"{__name__}: ")  # TODO:
 
     def __call__(self, *, bar: KeyType = None, **kwargs: Any) -> ResultType:
         self.set_properties(**kwargs)
@@ -62,19 +61,19 @@ class Indicator(ABC, Price):
                     if 0 <= start < stop <= self.len_dataset:
                         return self.data_buffer[start:stop]
                 case _:
-                    raise IndexError(f"Неверный индекс: {key}")
+                    raise IndexError(f"{__name__}: неверный индекс: {key}")
 
     def __setitem__(self, key: KeyType, value: ResultType) -> None:
         if not isinstance(key, int | slice) or not isinstance(value, float):
-            raise TypeError("Неверный тип индекса")
+            raise TypeError(f"{__name__}: неверный тип индекса")
 
-        print("Нет возможности вносить изменения в данные")
+        print(f"{__name__}: нет возможности вносить изменения в данные")
 
     def __delitem__(self, key: KeyType) -> None:
         if not isinstance(key, int | slice):
-            raise TypeError("Неверный тип индекса")
+            raise TypeError(f"{__name__}: неверный тип индекса")
 
-        print("Нет возможности удалять данные")
+        print(f"{__name__}: нет возможности удалить данные")
 
     def set_properties(self, **kwargs: Any) -> None:
         if kwargs != {}:
@@ -85,6 +84,9 @@ class Indicator(ABC, Price):
                     _key = "_" + key
                     if _key in self.__dict__:
                         self.__dict__[_key] = kwargs[key]
+
+    def get_indicator(self) -> None:  # TODO:
+        ...
 
     @abstractmethod
     def calculate(self, *args: Any, **kwargs: Any) -> ResultType:

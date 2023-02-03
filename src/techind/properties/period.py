@@ -2,10 +2,10 @@ class Period:
     """Period - период.
     """
 
-    # __slots__ = ("_period",)
+    # __slots__ = "_period"
 
-    MIN_VALUE: int = 1
-    MAX_VALUE: int = 10000
+    MIN_PERIOD: int = 1
+    MAX_PERIOD: int = 10000
 
     def __init__(self, period: int) -> None:
         self._period: int = Period._check(period)
@@ -20,7 +20,7 @@ class Period:
 
     @classmethod
     def _check(cls, value: int) -> int:
-        if cls.MIN_VALUE <= value <= cls.MAX_VALUE:
+        if cls.MIN_PERIOD <= value <= cls.MAX_PERIOD:
             return value
         else:
-            raise ValueError("Значение периода не соответствует заданному интервалу")
+            raise ValueError(f"{__name__}: значение периода не соответствует заданному интервалу")

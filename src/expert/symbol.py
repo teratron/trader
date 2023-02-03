@@ -18,6 +18,6 @@ class Symbol:
     @symbol.setter
     def symbol(self, value: str) -> None:
         if not isinstance(value, str):
-            raise TypeError("")
+            raise TypeError(f"{__name__}: ")
 
         self._symbol = value

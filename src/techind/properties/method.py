@@ -50,16 +50,17 @@ class Method(Period, MethodeMode):
         if cls.SMA <= value <= cls.LWMA:
             return value
         else:
-            raise ValueError("Константа метода не соответствует существующим значениям")
+            raise ValueError(f"{__name__}: константа метода не соответствует существующим значениям")
 
     def moving_average(self, dataset: DataType) -> list[float]:
         return moving_average(dataset, period=self._period, method=self._method)
 
 
 def moving_average(dataset: DataType, *, period: int, method: int) -> list[float]:
-    """Скользящая средняя."""
+    """Скользящая средняя.
+    """
     if period > len(dataset):
-        raise ValueError("Период превышает длину массива")
+        raise ValueError(f"{__name__}: период превышает длину массива")
 
     if not isinstance(dataset, list):
         dataset = list(dataset)
@@ -80,6 +81,7 @@ def _get_sma(dataset: DataType, period: int) -> list[float]:
 
     `SMA = sum(price(i), n) / n`
     """
+    print(dataset)
     return [
         sum(dataset[i:i + period]) / period
         for i in range(len(dataset) - period + 1)

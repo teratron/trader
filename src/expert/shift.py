@@ -16,4 +16,4 @@ class Shift:
         if 0 < value < 1000:
             self._shift = value
         else:
-            raise ValueError("")
+            raise ValueError(f"{__name__}: ")

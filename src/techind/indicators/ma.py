@@ -9,17 +9,19 @@ class MA(Indicator, Method):  # Price Period
 
     Class `MA`:
 
-    * MA(data_series=[])
-    * MA(data_series=[], period=24, method=0, price=0)
+    * MA(data_series=[]) -- создаёт экземпляр индикатора и рассчитывает переданные данные с параметрами по умолчанию.
+    * MA([], period=24, method=2, price=0) -- тоже самое, что выше, но с заданными параметрами.
 
     Instance `ma = MA()`:
 
     * ma
-    * ma[42]
-    * ma[:42]
-    * ma()
-    * ma(period=24, method=0, price=0, bar=42)
-    * ma(period=24, method=0, price=0, bar=slice(0, 42))
+    * ma[42] -- возвращает значение индикатора в определённом баре.
+    * ma[:42] -- тоже самое, что выше, но возвращает срез баров.
+    * ma() -- пересчитывает все значения индикатора с заданными ранее параметрами.
+    * ma(period=24, method=0) -- тоже самое, что выше, но параметры задаются непосредственно аргументами.
+    * ma(bar=42) -- вычисляет и заменяет значение индикатора для заданного бара.
+    * ma(method=0, price=0, bar=42) -- тоже самое, что выше, но с заданными параметрами.
+    * ma(period=24, bar=slice(0, 42)) -- тоже самое, что выше, но с заданными параметрами и для среза баров.
 
     int iMA(
         string               symbol,            // имя символа
@@ -48,7 +50,7 @@ class MA(Indicator, Method):  # Price Period
     def calculate(self, *, bar: KeyType = None) -> ResultType:
         # print(self.data_buffer)
         self.data_buffer = self.moving_average(self.data_buffer)
-        self.data_buffer.extend([None] * (self.len_dataset - len(self.data_buffer)))
+        # self.data_buffer.extend([None] * (self.len_dataset - len(self.data_buffer)))
         # print(self.data_buffer)
         # print("ma", list(map(lambda x: round(x, 6), self.moving_average(self.data_buffer))))
 

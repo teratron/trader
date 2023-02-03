@@ -58,7 +58,7 @@ class Price(PriceMode):
         if cls.CLOSE <= value <= cls.WEIGHTED:
             return value
         else:
-            raise ValueError("Константа цены не соответствует существующим значениям")
+            raise ValueError(f"{__name__}: константа цены не соответствует существующим значениям")
 
     def get_price(self, *bar: float) -> float:
         return get_price(*bar, price=self._price)

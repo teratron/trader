@@ -1,4 +1,4 @@
-from typing import Union, Sequence, Any
+from typing import Union, Sequence, Optional
 
 # class Mode(IntEnum):
 #     PriceType = 0
@@ -38,34 +38,45 @@ from typing import Union, Sequence, Any
 # BT = NewType("BT", tuple[int, float, float, float, float, int, int, int])
 # print(BT, Type[BT])
 
+# DataSeriesType = Union[
+#     list[float],
+#     list[tuple[float, float, float, float]],  # OHLC Data
+#     list[tuple[int, float, float, float, float, int, int, int]],  # Bar Data
+#     list[tuple[int, float, float, float, int, int, int, float]],  # Tick Data
+#     None
+# ]
+
 OHLCType = tuple[float, float, float, float]
 BarType = tuple[int, float, float, float, float, int, int, int]
 TickType = tuple[int, float, float, float, int, int, int, float]
 
-DataSeriesType = Union[
-    list[float],
-    list[tuple[float, float, float, float]],  # OHLC Data
-    list[tuple[int, float, float, float, float, int, int, int]],  # Bar Data
-    list[tuple[int, float, float, float, int, int, int, float]],  # Tick Data
-    # Sequence[Union[OHLCType, BarType, TickType, float]],
+DataSeriesType = Optional[Sequence[Union[
+    OHLCType,
+    BarType,
+    TickType,
+    float
+]]]
+
+KeyType = int | slice | None
+ValueType = float | int
+ValueNoneType = Optional[ValueType]
+DataType = list[ValueType]
+
+BufferType = Union[
+    DataType,
+    list[DataType],
     None
 ]
 
-BufferType = Union[
-    list[float | None],
-    # list[tuple[int, float]],
-    list[tuple[Any, ...]],
-    list[list[float | int | bool]],
+IndicatorType = Union[
+    list[ValueNoneType],
+    list[list[ValueNoneType]],
     None
 ]
 
 ResultType = Union[
-    float,
-    list[float | None],
-    list[tuple[Any, ...]],
-    tuple[Any, ...],
-    None
+    ValueNoneType,
+    tuple[ValueNoneType, ...],
+    list[ValueNoneType],
+    list[tuple[ValueNoneType, ...]]
 ]
-
-DataType = Sequence[float | int]
-KeyType = int | slice | None

@@ -31,10 +31,10 @@
 
 # def __setitem__(self, key: KeyType, value: float) -> None:
 #     if not isinstance(key, int):
-#         raise TypeError("Индекс должен быть целым числом")
+#         raise TypeError(f"{__name__}: "Индекс должен быть целым числом")
 #
 #     if key < 0:
-#         raise IndexError("Индекс должен быть неотрицательным числом")
+#         raise IndexError(f"{__name__}: "Индекс должен быть неотрицательным числом")
 #
 #     match self.dataset:
 #         case list():
@@ -44,12 +44,12 @@
 #
 #             self.dataset[key] = value
 #         case _:
-#             raise TypeError("Буфер индикатора не соответствует необходимому типу данных")
+#             raise TypeError(f"{__name__}: "Буфер индикатора не соответствует необходимому типу данных")
 
 
 # def __delitem__(self, key: KeyType) -> None:
 #     if not isinstance(key, int):
-#         raise TypeError("Индекс должен быть целым числом")
+#         raise TypeError(f"{__name__}: "Индекс должен быть целым числом")
 #     if isinstance(self.dataset, list):
 #         del self.dataset[key]
 
