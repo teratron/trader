@@ -1,7 +1,4 @@
-from dataclasses import dataclass
-
-
-@dataclass
+# @dataclass
 class PriceMode:
     """Mode - тип цены.
 

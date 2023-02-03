@@ -1,5 +1,3 @@
-from dataclasses import dataclass
-
 from techind.properties.period import Period
 from techind.types import DataType
 
@@ -19,7 +17,7 @@ from techind.types import DataType
 # print(mt)
 
 
-@dataclass
+# @dataclass
 class MethodeMode:
     """Mode - типы сглаживания.
 
@@ -156,7 +154,3 @@ def _get_lwma(dataset: DataType, period: int) -> list[float]:
         array.append(m / n)
 
     return array
-
-# if __name__ == "__main__":
-#   print(_get_smma([0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0], 3))
-#   print(_get_lwma([0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0], 3))

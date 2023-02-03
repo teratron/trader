@@ -64,7 +64,7 @@ DataSeriesType = Optional[
 KeyType = int | slice | None
 ValueType = float | int
 ValueNoneType = Optional[ValueType]
-DataType = Sequence[ValueType]
+DataType = list[ValueType]
 
 BufferType = Union[
     DataType,
