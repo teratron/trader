@@ -50,17 +50,21 @@ OHLCType = tuple[float, float, float, float]
 BarType = tuple[int, float, float, float, float, int, int, int]
 TickType = tuple[int, float, float, float, int, int, int, float]
 
-DataSeriesType = Optional[Sequence[Union[
-    OHLCType,
-    BarType,
-    TickType,
-    float
-]]]
+DataSeriesType = Optional[
+    Sequence[
+        Union[
+            OHLCType,
+            BarType,
+            TickType,
+            float
+        ]
+    ]
+]
 
 KeyType = int | slice | None
 ValueType = float | int
 ValueNoneType = Optional[ValueType]
-DataType = list[ValueType]
+DataType = Sequence[ValueType]
 
 BufferType = Union[
     DataType,

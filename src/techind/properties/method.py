@@ -4,6 +4,21 @@ from techind.properties.period import Period
 from techind.types import DataType
 
 
+# class MethodType(int):
+#
+#     def __init__(self, value=0):
+#         self.value = value
+#         super().__init__(value)
+#
+#     def __get__(self, instance, owner):
+#         print({instance}, {owner})
+#         return 42
+#
+#
+# mt = MethodType()
+# print(mt)
+
+
 @dataclass
 class MethodeMode:
     """Mode - типы сглаживания.

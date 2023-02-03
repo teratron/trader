@@ -90,3 +90,5 @@ if __name__ == "__main__":
     ma[2] = 9.61
     print(ma.__dict__)
     del ma[1]
+
+    print("+++", ma)

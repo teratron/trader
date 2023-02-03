@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from typing import Any
 
 from techind.properties.price import Price
-from techind.types import DataSeriesType, BufferType, ResultType, KeyType
+from techind.types import DataSeriesType, BufferType, ResultType, KeyType, OHLCType
 
 
 class Indicator(ABC, Price):
@@ -27,10 +27,11 @@ class Indicator(ABC, Price):
                     case float():
                         self.data_buffer = self.data_series[:]
                     case tuple():
-                        self.data_buffer = []
+                        self.data_buffer: list[float] = []
                         for row in self.data_series:
                             match row:
-                                case tuple():
+                                case tuple() if row is OHLCType:
+                                    # if row is tuple[float, ...]:
                                     self.data_buffer.append(self.get_price(*row[1:5]))  # TODO: OHLC
                                 case _:
                                     raise ValueError(f"{__name__}: данные не определены")
@@ -42,6 +43,10 @@ class Indicator(ABC, Price):
                     self.is_ready = True
         else:
             raise TypeError(f"{__name__}: ")  # TODO:
+
+    def __get__(self, instance, owner):
+        print("instance", instance, "owner", owner)
+        return None
 
     def __call__(self, *, bar: KeyType = None, **kwargs: Any) -> ResultType:
         self.set_properties(**kwargs)
