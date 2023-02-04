@@ -1,7 +1,7 @@
 from techind.indicator import Indicator
 from techind.properties.method import Method
 from techind.properties.price import Price
-from techind.types import DataSeriesType, KeyType, ResultType
+from techind.types import DataSeriesType, KeyType, ResultType, DataType
 
 
 class MA(Indicator, Method):  # Price Period
@@ -33,7 +33,7 @@ class MA(Indicator, Method):  # Price Period
     );
     """
 
-    # __slots__ = ("_period", "_method", "_price")
+    __slots__ = ("_period", "_method", "_price")
 
     def __init__(
             self,
@@ -49,7 +49,10 @@ class MA(Indicator, Method):  # Price Period
 
     def calculate(self, *, bar: KeyType = None) -> ResultType:
         # print(self.data_buffer)
-        self.data_buffer = self.moving_average(self.data_buffer)
+        # if isinstance(self.data_buffer, list):
+        #     if isinstance(self.data_buffer[0], float):
+        data: DataType = self.data_buffer
+        self.data_buffer = self.moving_average(data)
         # self.data_buffer.extend([None] * (self.len_dataset - len(self.data_buffer)))
         # print(self.data_buffer)
         # print("ma", list(map(lambda x: round(x, 6), self.moving_average(self.data_buffer))))

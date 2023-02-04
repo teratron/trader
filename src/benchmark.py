@@ -1,12 +1,12 @@
 from time import time
 from typing import Any, Callable
 
-TargetType = Callable[[Any, Any], Any]
-InnerType = Callable[[Any, Any], float]
-OuterType = Callable[[TargetType], InnerType]
+_TargetType = Callable[[Any, Any], Any]
+_InnerType = Callable[[Any, Any], float]
+_OuterType = Callable[[_TargetType], _InnerType]
 
 
-def benchmark(repeat: int = 1000, epoch: int = 100) -> OuterType:
+def benchmark(repeat: int = 1000, epoch: int = 100) -> _OuterType:
     """Benchmark.
 
     :param repeat:
@@ -14,7 +14,7 @@ def benchmark(repeat: int = 1000, epoch: int = 100) -> OuterType:
     :return:
     """
 
-    def outer(func: TargetType) -> InnerType:
+    def outer(func: _TargetType) -> _InnerType:
         def inner(*args: Any, **kwargs: Any) -> float:
             sum_time: float = 0
             for _ in range(epoch):
