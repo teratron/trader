@@ -1,3 +1,9 @@
+from typing import Optional
+
+PriceType = float
+PriceDataType = Optional[list[PriceType]]
+
+
 # @dataclass
 class PriceMode:
     """Mode - тип цены.

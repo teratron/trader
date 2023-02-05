@@ -42,12 +42,12 @@ class MethodeMode:
     """Линейно-взвешенное усреднение."""
 
 
-class Method(Period, MethodeMode):
+class Method(MethodeMode, Period):
     """Method.
     """
 
     def __init__(self, /, method: int, period: int) -> None:
-        super().__init__(period)
+        Period.__init__(self, period)
         self._method: int = Method._check(method)
 
     @property
@@ -94,14 +94,13 @@ def _get_sma(dataset: DataType, period: int) -> list[float]:
 
     `SMA = sum(price(i), n) / n`
     """
-    print(dataset)
     return [
         sum(dataset[i:i + period]) / period
         for i in range(len(dataset) - period + 1)
     ]
 
 
-def _get_ema(dataset: DataType, period: int) -> list[float]:
+def _get_ema(dataset: DataType, period: int) -> list[float]:  # TODO: reverse
     """Экспоненциальное усреднение.
 
     `p = 2 / (n + 1)`
@@ -119,7 +118,7 @@ def _get_ema(dataset: DataType, period: int) -> list[float]:
     return array
 
 
-def _get_smma(dataset: DataType, period: int) -> list[float]:
+def _get_smma(dataset: DataType, period: int) -> list[float]:  # TODO: reverse
     """Сглаженное усреднение.
 
     `SMMA(0) = sum(price(i), n) / n`

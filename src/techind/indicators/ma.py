@@ -33,7 +33,7 @@ class MA(Indicator, Method):  # Price Period
     );
     """
 
-    __slots__ = ("_period", "_method", "_price")
+    # __slots__ = ("_period", "_method", "_price")
 
     def __init__(
             self,
@@ -61,8 +61,6 @@ class MA(Indicator, Method):  # Price Period
 
 
 if __name__ == "__main__":
-    # from techind.dataset import eurusd_rates
-    #
     # if isinstance(eurusd_rates, list):
     #     ma = MA(eurusd_rates, period=2, method=MA.EMA, price=MA.TYPICAL)
     #     # print(ma)
