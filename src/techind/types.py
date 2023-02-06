@@ -50,10 +50,14 @@ OHLCType = tuple[float, float, float, float]
 BarType = tuple[int, float, float, float, float, int, int, int]
 TickType = tuple[int, float, float, float, int, int, int, float]
 
+# ohlc_template: OHLCType = float(), float(), float(), float()
+# BarTemplate: BarType = int(), float(), float(), float(), float(), int(), int(), int()
+# tick_template: TickType = int(), float(), float(), float(), int(), int(), int(), float()
+
 DataSeriesType = Optional[
     Sequence[
         Union[
-            OHLCType,
+            # OHLCType,
             BarType,
             TickType,
             float
