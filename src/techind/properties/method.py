@@ -18,7 +18,7 @@ from techind.types import DataType
 
 # @dataclass
 class MethodeMode:
-    """Mode - типы сглаживания.
+    """MethodeMode - типы сглаживания.
 
     Усреднённые константы:
 

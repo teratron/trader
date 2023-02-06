@@ -81,37 +81,37 @@ class MA(Indicator, Period, Method, Price):  # Price Period
 
 
 if __name__ == "__main__":
-    # from techind.dataset import eurusd_rates
-    #
-    # if isinstance(eurusd_rates, list):
-    #     ma = MA(eurusd_rates, period=2, method=MA.EMA, price=MA.TYPICAL)
-    #     # print(ma)
-    #     ma.period = 5
-    #     print(ma.__dict__)
+    from techind.dataset import eurusd_rates
+
+    if isinstance(eurusd_rates, list):
+        ma = MA(eurusd_rates, period=2, method=MA.EMA, price=MA.TYPICAL)
+        # print(ma)
+        ma.period = 5
+        print(ma.__dict__)
 
     # from techind.data import test_rates
     # if isinstance(test_rates, list):
     #     ma = MA(test_rates, period=3, method=0, price=0)
 
-    data_series: DataSeriesType = [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 7.0]
-    ma = MA(data_series, period=4, method=0)
-    print(ma.__dict__)
-    print(ma(period=3, method=1, price=3, bar=3))
-    print(ma.__dict__)
-    print(ma(period=5, method=3, price=2))
-    print(ma.__dict__)
-    print(ma(bar=slice(1, 3)))
-    print(ma.__dict__)
-    print(ma())
-    print(ma.__dict__)
-    print(ma[2])
-    print(ma.__dict__)
-    print(ma[:2])
-    print(ma.__dict__)
-    ma.method = 0
-    print(ma.__dict__)
-    ma[2] = 9.61
-    print(ma.__dict__)
-    del ma[1]
+    # data_series: DataSeriesType = [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 7.0]
+    # ma = MA(data_series, period=4, method=0)
+    # print(ma.__dict__)
+    # print(ma(period=3, method=1, price=3, bar=3))
+    # print(ma.__dict__)
+    # print(ma(period=5, method=3, price=2))
+    # print(ma.__dict__)
+    # print(ma(bar=slice(1, 3)))
+    # print(ma.__dict__)
+    # print(ma())
+    # print(ma.__dict__)
+    # print(ma[2])
+    # print(ma.__dict__)
+    # print(ma[:2])
+    # print(ma.__dict__)
+    # ma.method = 0
+    # print(ma.__dict__)
+    # ma[2] = 9.61
+    # print(ma.__dict__)
+    # del ma[1]
 
     print("+++", ma)

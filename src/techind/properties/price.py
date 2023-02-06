@@ -1,6 +1,6 @@
 # @dataclass
 class PriceMode:
-    """Mode - тип цены.
+    """PriceMode - тип цены.
 
     Ценовые константы:
 
@@ -56,8 +56,8 @@ class Price(PriceMode):
             return value
         raise ValueError(f"{__name__}: константа цены не соответствует существующим значениям")
 
-    def get_price(self, *bar: float) -> float:
-        return get_price(*bar, price=self._price)
+    def get_price(self, *bar_price: float) -> float:
+        return get_price(*bar_price, price_mode=self._price)
 
 
 def get_price(
@@ -66,10 +66,10 @@ def get_price(
         low_price: float,
         close_price: float,
         *,
-        price: int = Price.CLOSE
+        price_mode: int = Price.CLOSE
 ) -> float:
     """Формирование цены."""
-    match price:
+    match price_mode:
         case Price.OPEN:
             return open_price
         case Price.HIGH:

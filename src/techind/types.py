@@ -65,6 +65,14 @@ DataSeriesType = Optional[
     ]
 ]
 
+
+def dataseriestype(func):
+    def inner(*args, **kwargs):
+        func(*args, **kwargs)
+
+    return inner
+
+
 PriceType = float
 PriceDataType = Optional[list[PriceType]]
 KeyType = int | slice | None
