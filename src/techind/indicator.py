@@ -1,44 +1,36 @@
 from abc import ABC, abstractmethod
+from enum import IntEnum
+
 from typing import Any
 
-from techind.properties.price import Price
-from techind.types import DataSeriesType, BufferType, ResultType, KeyType
+from techind.types import DataSeriesType, BufferType, ResultType, KeyType, PriceDataType
 
 
-class Indicator(ABC, Price):
+class State(IntEnum):
+    DATA = 0
+    INIT = 1
+
+
+class Indicator(ABC):
     """Indicator.
     """
 
     data_series: DataSeriesType = None
     data_buffer: BufferType = None
+    price_buffer: PriceDataType = None
     len_dataset: int = 0
     is_ready: bool = False
 
-    def __init__(self, /, dataset: DataSeriesType, price: int) -> None:
-        Price.__init__(self, price)
+    def __init__(self, dataset: DataSeriesType) -> None:
 
         if isinstance(dataset, list):  # TODO: validation data_series
             self.data_series = dataset
             self.len_dataset = len(self.data_series)
 
             if self.len_dataset > 0:
-                match self.data_series[0]:
-                    case float():
-                        self.data_buffer = self.data_series[:]
-                    case tuple():
-                        self.data_buffer: list[float] = []
-                        for row in self.data_series:
-                            match row:
-                                case tuple():  # if row is OHLCType:
-                                    # if row is tuple[float, ...]:
-                                    self.data_buffer.append(self.get_price(*row[1:5]))  # TODO: OHLC
-                                case _:
-                                    raise ValueError(f"{__name__}: данные не определены")
-                    case _:
-                        raise ValueError(f"{__name__}: данные не определены")
 
-                if self.len_dataset == len(self.data_buffer):
-                    self.calculate()
+                # if self.len_dataset == len(self.data_buffer):
+                if self.calculate() is None:
                     self.is_ready = True
         else:
             raise TypeError(f"{__name__}: ")  # TODO:
@@ -83,12 +75,12 @@ class Indicator(ABC, Price):
         if kwargs != {}:
             for key in kwargs:
                 if key in self.__dict__:
-                    print(f"{key = }")
+                    # print(f"{key = }")
                     self.__dict__[key] = kwargs[key]
                 else:
                     _key = "_" + key
                     if _key in self.__dict__:
-                        print(f"{_key = }")
+                        #print(f"{_key = }")
                         self.__dict__[_key] = kwargs[key]
 
     def get_indicator(self) -> None:  # TODO:

@@ -1,10 +1,11 @@
 from techind.indicator import Indicator
 from techind.properties.method import Method
+from techind.properties.period import Period
 from techind.properties.price import Price
-from techind.types import DataSeriesType, KeyType, ResultType, DataType
+from techind.types import DataSeriesType, KeyType, ResultType
 
 
-class MA(Indicator, Method):  # Price Period
+class MA(Indicator, Period, Method, Price):  # Price Period
     """Moving Average.
 
     Class `MA`:
@@ -37,59 +38,74 @@ class MA(Indicator, Method):  # Price Period
 
     def __init__(
             self,
-            /,
             dataset: DataSeriesType,
             *,
             period: int = 3,
             method: int = Method.SMA,
             price: int = Price.CLOSE
     ) -> None:
-        Method.__init__(self, method, period)
-        super().__init__(dataset, price)
+        Period.__init__(self, period)
+        Method.__init__(self, method)
+        Price.__init__(self, price)
+        super().__init__(dataset)
 
     def calculate(self, *, bar: KeyType = None) -> ResultType:
-        # print(self.data_buffer)
-        # if isinstance(self.data_buffer, list):
-        #     if isinstance(self.data_buffer[0], float):
-        data: DataType = self.data_buffer
-        self.data_buffer = self.moving_average(data)
-        # self.data_buffer.extend([None] * (self.len_dataset - len(self.data_buffer)))
-        # print(self.data_buffer)
-        # print("ma", list(map(lambda x: round(x, 6), self.moving_average(self.data_buffer))))
+        if bar is None:
+            match self.data_series[0]:
+                case float():
+                    self.price_buffer = self.data_series[:]
+                case tuple():
+                    self.price_buffer = []
+                    for row in self.data_series:
+                        match row:
+                            case int(), float(), float(), float(), float(), int(), int(), int():  # Bar
+                                self.price_buffer.append(self.get_price(*row[1:5]))  # OHLC
+                            case int(), float(), float(), float(), int(), int(), int(), float():  # Tick
+                                self.price_buffer.append(self.get_price(*row[1:]))  # Bid, Ask
+                            case _:
+                                raise ValueError(f"{__name__}: данные не определены")
+                case _:
+                    raise ValueError(f"{__name__}: данные не определены")
+            self.data_buffer = self.moving_average(self.price_buffer, period=self.period)
+            self.data_buffer.extend([None] * (self.len_dataset - len(self.data_buffer)))
+            # print(self.data_buffer)
+            # print("ma", list(map(lambda x: round(x, 6), self.moving_average(self.data_buffer))))
 
         return None
 
 
 if __name__ == "__main__":
-    # if isinstance(eurusd_rates, list):
-    #     ma = MA(eurusd_rates, period=2, method=MA.EMA, price=MA.TYPICAL)
-    #     # print(ma)
-    #     ma.period = 5
-    #     print(ma.__dict__)
+    from techind.dataset import eurusd_rates
+
+    if isinstance(eurusd_rates, list):
+        ma = MA(eurusd_rates, period=2, method=MA.EMA, price=MA.TYPICAL)
+        # print(ma)
+        ma.period = 5
+        print(ma.__dict__)
 
     # from techind.data import test_rates
     # if isinstance(test_rates, list):
     #     ma = MA(test_rates, period=3, method=0, price=0)
 
-    data_series: DataSeriesType = [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 7.0]
-    ma = MA(data_series, period=4, method=0)
-    print(ma.__dict__)
-    print(ma(period=3, method=1, price=3, bar=3))
-    print(ma.__dict__)
-    print(ma(period=5, method=3, price=2))
-    print(ma.__dict__)
-    print(ma(bar=slice(1, 3)))
-    print(ma.__dict__)
-    print(ma())
-    print(ma.__dict__)
-    print(ma[2])
-    print(ma.__dict__)
-    print(ma[:2])
-    print(ma.__dict__)
-    ma.method = 0
-    print(ma.__dict__)
-    ma[2] = 9.61
-    print(ma.__dict__)
-    del ma[1]
-
-    print("+++", ma)
+    # data_series: DataSeriesType = [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 7.0]
+    # ma = MA(data_series, period=4, method=0)
+    # print(ma.__dict__)
+    # print(ma(period=3, method=1, price=3, bar=3))
+    # print(ma.__dict__)
+    # print(ma(period=5, method=3, price=2))
+    # print(ma.__dict__)
+    # print(ma(bar=slice(1, 3)))
+    # print(ma.__dict__)
+    # print(ma())
+    # print(ma.__dict__)
+    # print(ma[2])
+    # print(ma.__dict__)
+    # print(ma[:2])
+    # print(ma.__dict__)
+    # ma.method = 0
+    # print(ma.__dict__)
+    # ma[2] = 9.61
+    # print(ma.__dict__)
+    # del ma[1]
+    #
+    # print("+++", ma)

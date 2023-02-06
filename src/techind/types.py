@@ -61,6 +61,8 @@ DataSeriesType = Optional[
     ]
 ]
 
+PriceType = float
+PriceDataType = Optional[list[PriceType]]
 KeyType = int | slice | None
 ValueType = float | int
 ValueNoneType = Optional[ValueType]

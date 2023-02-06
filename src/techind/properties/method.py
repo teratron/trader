@@ -1,4 +1,3 @@
-from techind.properties.period import Period
 from techind.types import DataType
 
 
@@ -42,12 +41,11 @@ class MethodeMode:
     """Линейно-взвешенное усреднение."""
 
 
-class Method(MethodeMode, Period):
+class Method(MethodeMode):
     """Method.
     """
 
-    def __init__(self, /, method: int, period: int) -> None:
-        Period.__init__(self, period)
+    def __init__(self, method: int) -> None:
         self._method: int = Method._check(method)
 
     @property
@@ -62,19 +60,22 @@ class Method(MethodeMode, Period):
     def _check(cls, value: int) -> int:
         if cls.SMA <= value <= cls.LWMA:
             return value
-        else:
-            raise ValueError(f"{__name__}: константа метода не соответствует существующим значениям")
+        raise ValueError(f"{__name__}: константа метода не соответствует существующим значениям")
 
-    def moving_average(self, dataset: DataType) -> list[float]:
-        return moving_average(dataset, period=self._period, method=self._method)
+    def moving_average(self, dataset: DataType, period: int) -> list[float]:
+        return moving_average(dataset, period, self._method)
 
 
-def moving_average(dataset: DataType, *, period: int, method: int) -> list[float]:
+def moving_average(dataset: DataType, period: int, method: int) -> list[float]:
     """Скользящая средняя.
+
+    :param dataset: данные которые нужно сгладить;
+    :param period: период сглаживания;
+    :param method: один из типов сглаживания.
+    :return: массив сглаженных данных
     """
     if period > len(dataset):
         raise ValueError(f"{__name__}: период превышает длину массива")
-
     if not isinstance(dataset, list):
         dataset = list(dataset)
 

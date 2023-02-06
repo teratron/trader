@@ -22,5 +22,4 @@ class Period:
     def _check(cls, value: int) -> int:
         if cls.MIN_PERIOD <= value <= cls.MAX_PERIOD:
             return value
-        else:
-            raise ValueError(f"{__name__}: значение периода не соответствует заданному интервалу")
+        raise ValueError(f"{__name__}: значение периода не соответствует заданному интервалу")
