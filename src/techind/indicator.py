@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 from enum import IntEnum
-
 from typing import Any
 
 from techind.types import DataSeriesType, BufferType, ResultType, KeyType, PriceDataType
@@ -36,7 +35,7 @@ class Indicator(ABC):
             raise TypeError(f"{__name__}: ")  # TODO:
 
     def __get__(self, instance, owner) -> float:
-        print("instance", instance, "owner", owner)
+        print("__get__, instance", instance, "owner", owner)
         return 0.1
 
     def __call__(self, *, bar: KeyType = None, **kwargs: Any) -> ResultType:

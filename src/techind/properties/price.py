@@ -1,21 +1,21 @@
-from typing import Union, NamedTuple
-
-BarPriceType = Union[
-    float,
-    list[float]
-]
-
-
-class OHLCType(NamedTuple):
-    open_price: float
-    high_price: float
-    low_price: float
-    close_price: float
-
-
-class BidAskType(NamedTuple):
-    bid_price: float
-    ask_price: float
+# from typing import Union, NamedTuple
+#
+# BarPriceType = Union[
+#     float,
+#     list[float]
+# ]
+#
+#
+# class OHLCType(NamedTuple):
+#     open_price: float
+#     high_price: float
+#     low_price: float
+#     close_price: float
+#
+#
+# class BidAskType(NamedTuple):
+#     bid_price: float
+#     ask_price: float
 
 
 class Price:
@@ -54,20 +54,22 @@ class Price:
     """Взвешенная цена закрытия."""
 
     BID: int = 7
-    """Цена закрытия."""
+    """Цена покупки."""
 
     ASK: int = 8
-    """Цена открытия."""
+    """Цена продажи."""
 
     def __init__(self, price: int) -> None:
         self._price: int = Price.check(price)
 
     @property
     def price(self) -> int:
+        print("get price")
         return self._price
 
     @price.setter
     def price(self, value: int) -> None:
+        print("set price")
         self._price = Price.check(value)
 
     @classmethod
@@ -77,6 +79,7 @@ class Price:
         raise ValueError(f"{__name__}: константа цены не соответствует существующим значениям")
 
     def get_price(self, *prices: float) -> float:
+        print(prices)
         return get_price(self._price, *prices)
 
 

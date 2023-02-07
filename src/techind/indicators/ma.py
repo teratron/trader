@@ -1,7 +1,7 @@
 from techind.indicator import Indicator
 from techind.properties.method import Method
 from techind.properties.period import Period
-from techind.properties.price import Price
+from techind.properties.price import Price, get_price
 from techind.types import DataSeriesType, KeyType, ResultType
 
 
@@ -62,9 +62,9 @@ class MA(Indicator, Method, Price):
                     for row in self.data_series:
                         match row:
                             case int(), float(), float(), float(), float(), int(), int(), int():  # Bar
-                                self.price_buffer.append(self.get_price(self.price, *row[1:5]))  # OHLC
+                                self.price_buffer.append(get_price(self.price, *row[1:5]))  # OHLC
                             case int(), float(), float(), float(), int(), int(), int(), float():  # Tick
-                                self.price_buffer.append(self.get_price(self.price, *row[1:3]))  # Bid, Ask
+                                self.price_buffer.append(get_price(self.price, *row[1:3]))  # Bid, Ask
                             case _:
                                 raise ValueError(f"{__name__}: данные не определены")
                 case _:
@@ -84,7 +84,7 @@ if __name__ == "__main__":
 
     if isinstance(eurusd_rates, list):
         ma = MA(eurusd_rates, period=2, method=MA.EMA, price=MA.TYPICAL)
-        # print(ma)
+        print(ma.__dict__)
         ma.period = 5
         print(ma.__dict__)
 
@@ -112,5 +112,4 @@ if __name__ == "__main__":
     # ma[2] = 9.61
     # print(ma.__dict__)
     # del ma[1]
-
-    print("+++", ma)
+    # print("+++", ma)
