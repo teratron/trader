@@ -53,6 +53,12 @@ class Price:
     WEIGHTED: int = 6
     """Взвешенная цена закрытия."""
 
+    BID: int = 7
+    """Цена закрытия."""
+
+    ASK: int = 8
+    """Цена открытия."""
+
     def __init__(self, price: int) -> None:
         self._price: int = Price.check(price)
 
@@ -97,6 +103,21 @@ def get_price(
             return get_weighted(high_price, low_price, close_price)
         case Price.CLOSE | _:
             return close_price
+
+
+def get_price_tick(
+        price_mode: int,
+        bid_price: float,
+        ask_price: float
+) -> float:
+    """Формирование цены для тика."""
+    match price_mode:
+        case Price.ASK:
+            return ask_price
+        case Price.MEDIAN:
+            return get_median(bid_price, ask_price)
+        case Price.BID | _:
+            return bid_price
 
 
 def get_median(high_price: float, low_price: float) -> float:
