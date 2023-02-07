@@ -1,6 +1,25 @@
-# @dataclass
-class PriceMode:
-    """PriceMode - тип цены.
+from typing import Union, NamedTuple
+
+BarPriceType = Union[
+    float,
+    list[float]
+]
+
+
+class OHLCType(NamedTuple):
+    open_price: float
+    high_price: float
+    low_price: float
+    close_price: float
+
+
+class BidAskType(NamedTuple):
+    bid_price: float
+    ask_price: float
+
+
+class Price:
+    """Price - тип цены.
 
     Ценовые константы:
 
@@ -34,13 +53,8 @@ class PriceMode:
     WEIGHTED: int = 6
     """Взвешенная цена закрытия."""
 
-
-class Price(PriceMode):
-    """Price.
-    """
-
     def __init__(self, price: int) -> None:
-        self._price: int = Price._check(price)
+        self._price: int = Price.check(price)
 
     @property
     def price(self) -> int:
@@ -48,25 +62,24 @@ class Price(PriceMode):
 
     @price.setter
     def price(self, value: int) -> None:
-        self._price = Price._check(value)
+        self._price = Price.check(value)
 
     @classmethod
-    def _check(cls, value: int) -> int:
+    def check(cls, value: int) -> int:
         if cls.CLOSE <= value <= cls.WEIGHTED:
             return value
         raise ValueError(f"{__name__}: константа цены не соответствует существующим значениям")
 
-    def get_price(self, *bar_price: float) -> float:
-        return get_price(*bar_price, price_mode=self._price)
+    def get_price(self, *prices: float) -> float:
+        return get_price(self._price, *prices)
 
 
 def get_price(
+        price_mode: int,
         open_price: float,
         high_price: float,
         low_price: float,
-        close_price: float,
-        *,
-        price_mode: int = Price.CLOSE
+        close_price: float
 ) -> float:
     """Формирование цены."""
     match price_mode:
@@ -77,16 +90,16 @@ def get_price(
         case Price.LOW:
             return low_price
         case Price.MEDIAN:
-            return _get_median(high_price, low_price)
+            return get_median(high_price, low_price)
         case Price.TYPICAL:
-            return _get_typical(high_price, low_price, close_price)
+            return get_typical(high_price, low_price, close_price)
         case Price.WEIGHTED:
-            return _get_weighted(high_price, low_price, close_price)
+            return get_weighted(high_price, low_price, close_price)
         case Price.CLOSE | _:
             return close_price
 
 
-def _get_median(high_price: float, low_price: float) -> float:
+def get_median(high_price: float, low_price: float) -> float:
     """Медианная цена.
 
     `MEDIAN = (high + low) / 2`
@@ -94,7 +107,7 @@ def _get_median(high_price: float, low_price: float) -> float:
     return (high_price + low_price) / 2
 
 
-def _get_typical(high_price: float, low_price: float, close_price: float) -> float:
+def get_typical(high_price: float, low_price: float, close_price: float) -> float:
     """Типичная цена.
 
     `TYPICAL = (high + low + close) / 3`
@@ -102,7 +115,7 @@ def _get_typical(high_price: float, low_price: float, close_price: float) -> flo
     return (high_price + low_price + close_price) / 3
 
 
-def _get_weighted(high_price: float, low_price: float, close_price: float) -> float:
+def get_weighted(high_price: float, low_price: float, close_price: float) -> float:
     """Взвешенная цена закрытия.
 
     `WEIGHTED = (high + low + close + close) / 4`

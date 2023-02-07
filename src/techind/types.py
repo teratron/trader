@@ -25,13 +25,13 @@ from typing import Union, Sequence, Optional
 
 # class TickType(NamedTuple):
 #     time: int
-#     ask: float
-#     bid: float
+#     bid_price: float
+#     ask_price: float
 #     a: float
 #     tick_volume: int
+#     time_msc: int
 #     spread: int
-#     real_volume: int
-#     b: float
+#     real_volume: float
 
 # _BT = TypeVar("BT", int, float, float, float, float, int, int, int)
 # print(BT, Type[BT])
@@ -65,12 +65,11 @@ DataSeriesType = Optional[
     ]
 ]
 
-
-def dataseriestype(func):
-    def inner(*args, **kwargs):
-        func(*args, **kwargs)
-
-    return inner
+# def dataseriestype(func):
+#     def inner(*args, **kwargs):
+#         func(*args, **kwargs)
+#
+#     return inner
 
 
 PriceType = float

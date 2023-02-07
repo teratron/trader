@@ -5,7 +5,7 @@ from techind.properties.price import Price
 from techind.types import DataSeriesType, KeyType, ResultType
 
 
-class MA(Indicator, Period, Method, Price):  # Price Period
+class MA(Indicator, Method, Price):
     """Moving Average.
 
     Class `MA`:
@@ -44,9 +44,12 @@ class MA(Indicator, Period, Method, Price):  # Price Period
             method: int = Method.SMA,
             price: int = Price.CLOSE
     ) -> None:
-        Period.__init__(self, period)
-        Method.__init__(self, method)
-        Price.__init__(self, price)
+        self.period: int = Period.check(period)
+        self.method: int = Method.check(method)
+        self.price: int = Price.check(price)
+        # Period.__init__(self, period)
+        # Method.__init__(self, method)
+        # Price.__init__(self, price)
         super().__init__(dataset)
 
     def calculate(self, *, bar: KeyType = None) -> ResultType:
@@ -59,18 +62,14 @@ class MA(Indicator, Period, Method, Price):  # Price Period
                     for row in self.data_series:
                         match row:
                             case int(), float(), float(), float(), float(), int(), int(), int():  # Bar
-                                self.price_buffer.append(self.get_price(*row[1:5]))  # OHLC
+                                self.price_buffer.append(self.get_price(self.price, *row[1:5]))  # OHLC
                             case int(), float(), float(), float(), int(), int(), int(), float():  # Tick
-                                self.price_buffer.append(self.get_price(*row[1:]))  # Bid, Ask
+                                self.price_buffer.append(self.get_price(self.price, *row[1:3]))  # Bid, Ask
                             case _:
                                 raise ValueError(f"{__name__}: данные не определены")
                 case _:
                     raise ValueError(f"{__name__}: данные не определены")
 
-            # if self.data_buffer is not None:
-            #     match self.data_buffer:
-            #         case [float(), *_]:
-            #             print("***")
             self.data_buffer = self.moving_average(self.price_buffer, period=self.period)
             self.data_buffer.extend([None] * (self.len_dataset - len(self.data_buffer)))
 

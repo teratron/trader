@@ -1,24 +1,8 @@
 from techind.types import DataType
 
 
-# class MethodType(int):
-#
-#     def __init__(self, value=0):
-#         self.value = value
-#         super().__init__(value)
-#
-#     def __get__(self, instance, owner):
-#         print({instance}, {owner})
-#         return 42
-#
-#
-# mt = MethodType()
-# print(mt)
-
-
-# @dataclass
-class MethodeMode:
-    """MethodeMode - типы сглаживания.
+class Method:
+    """Methode - типы сглаживания.
 
     Усреднённые константы:
 
@@ -40,13 +24,8 @@ class MethodeMode:
     LWMA: int = 3
     """Линейно-взвешенное усреднение."""
 
-
-class Method(MethodeMode):
-    """Method.
-    """
-
     def __init__(self, method: int) -> None:
-        self._method: int = Method._check(method)
+        self._method: int = Method.check(method)
 
     @property
     def method(self) -> int:
@@ -54,10 +33,10 @@ class Method(MethodeMode):
 
     @method.setter
     def method(self, value: int) -> None:
-        self._method = Method._check(value)
+        self._method = Method.check(value)
 
     @classmethod
-    def _check(cls, value: int) -> int:
+    def check(cls, value: int) -> int:
         if cls.SMA <= value <= cls.LWMA:
             return value
         raise ValueError(f"{__name__}: константа метода не соответствует существующим значениям")

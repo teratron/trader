@@ -1,3 +1,26 @@
+# def calculate(self, *, bar: KeyType = None) -> ResultType:
+#     if bar is None and isinstance(self.data_series, list):
+#         match self.data_series:
+#             case [float(), *_]:
+#                 self.price_buffer = self.data_series[:]
+#             case [tuple(), *_]:
+#                 self.price_buffer = []
+#                 for row in self.data_series:
+#                     match row:
+#                         case int(), float(), float(), float(), float(), int(), int(), int():  # Bar
+#                             self.price_buffer.append(self.get_price(*row[1:5]))  # OHLC
+#                         case int(), float(), float(), float(), int(), int(), int(), float():  # Tick
+#                             self.price_buffer.append(self.get_price(*row[1:]))  # Bid, Ask
+#                         case _:
+#                             raise ValueError(f"{__name__}: данные не определены")
+#             case _:
+#                 raise ValueError(f"{__name__}: данные не определены")
+#         self.data_buffer = self.moving_average(self.price_buffer, period=self.period)
+#         self.data_buffer.extend([None] * (self.len_dataset - len(self.data_buffer)))
+#         print("ma", list(map(lambda x: round(x, 6), self.moving_average(self.data_buffer))))
+#     return None
+
+
 # @overload
 # def __call__(self, *, bar: KeyType = ..., **kwargs: Any) -> ResultType:
 #     ...
