@@ -62,15 +62,17 @@ class Price:
     def __init__(self, price: int) -> None:
         self._price: int = Price.check(price)
 
-    @property
-    def price(self) -> int:
-        print("get price")
-        return self._price
-
-    @price.setter
-    def price(self, value: int) -> None:
-        print("set price")
-        self._price = Price.check(value)
+    # @property
+    # def get_price(self) -> int:
+    #     print("get price")
+    #     return self._price
+    #
+    # @price.setter
+    # def set_price(self, value: int) -> None:
+    #     print("set price")
+    #     self._price = Price.check(value)
+    #
+    # price = property(None, set_price, None, "Price Mode Attribute")
 
     @classmethod
     def check(cls, value: int) -> int:
