@@ -6,9 +6,9 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'PyNN'
-copyright = '2023, Oleg'
-author = 'Oleg'
+project = 'Trader'
+copyright = '2023, Oleg Alexandrov'
+author = 'Oleg Alexandrov'
 release = '0.1.0'
 
 # -- General configuration ---------------------------------------------------
